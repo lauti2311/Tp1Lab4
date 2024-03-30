@@ -2,12 +2,40 @@ package Javaa;
 
 import java.sql.*;
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdministradorNoticia {
     private Connection conn;
 
     public AdministradorNoticia(Connection conn) {
         this.conn = conn;
+    }
+
+    public List<Noticia> obtenerNoticias() throws SQLException {
+        List<Noticia> noticias = new ArrayList<>();
+        String sql = "SELECT n.*, e.Denominación AS Empresa " +
+                "FROM Noticia n " +
+                "JOIN Empresa e ON n.idEmpresa = e.Id";
+        try (Statement statement = conn.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+            while (resultSet.next()) {
+                int id = resultSet.getInt("Id");
+                String titulo = resultSet.getString("Título de la noticia");
+                String resumen = resultSet.getString("Resumen de la Noticia");
+                String imagen = resultSet.getString("Imagen Noticia");
+                String contenido = resultSet.getString("Contenido HTML");
+                char publicada = resultSet.getString("Publicada").charAt(0);
+                Date fechaPublicacion = resultSet.getDate("Fecha Publicación");
+                int idEmpresa = resultSet.getInt("idEmpresa");
+                String empresa = resultSet.getString("Empresa");
+
+                Noticia noticia = new Noticia(id, titulo, resumen, imagen, contenido,
+                        publicada, fechaPublicacion, idEmpresa, empresa);
+                noticias.add(noticia);
+            }
+        }
+        return noticias;
     }
 
     public void altaNoticia(Scanner scanner) throws SQLException {
