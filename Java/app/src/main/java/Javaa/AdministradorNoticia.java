@@ -1,0 +1,64 @@
+package Javaa;
+
+import java.sql.*;
+import java.util.Scanner;
+
+public class AdministradorNoticia {
+    private Connection conn;
+
+    public AdministradorNoticia(Connection conn) {
+        this.conn = conn;
+    }
+
+    public void altaNoticia(Scanner scanner) throws SQLException {
+        System.out.println("\nIngrese los datos de la noticia:");
+        System.out.print("Título: ");
+        String titulo = scanner.nextLine();
+        System.out.print("Resumen: ");
+        String resumen = scanner.nextLine();
+        System.out.print("Imagen: ");
+        String imagen = scanner.nextLine();
+        System.out.print("Contenido HTML: ");
+        String contenido = scanner.nextLine();
+        System.out.print("Publicada (Y/N): ");
+        char publicada = scanner.nextLine().charAt(0);
+        System.out.print("Fecha de Publicación (YYYY-MM-DD): ");
+        String fechaPublicacion = scanner.nextLine();
+        System.out.print("ID de Empresa: ");
+        int idEmpresa = scanner.nextInt();
+
+        String sql = "INSERT INTO Noticia (`Título de la noticia`, `Resumen de la Noticia`, `Imagen Noticia`, `Contenido HTML`, Publicada, `Fecha Publicación`, idEmpresa) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement statement = conn.prepareStatement(sql);
+        statement.setString(1, titulo);
+        statement.setString(2, resumen);
+        statement.setString(3, imagen);
+        statement.setString(4, contenido);
+        statement.setString(5, String.valueOf(publicada));
+        statement.setDate(6, Date.valueOf(fechaPublicacion));
+        statement.setInt(7, idEmpresa);
+
+        int rowsInserted = statement.executeUpdate();
+        if (rowsInserted > 0) {
+            System.out.println("La noticia fue insertada exitosamente.");
+        } else {
+            System.out.println("No se pudo insertar la noticia.");
+        }
+    }
+
+    public void bajaNoticia(Scanner scanner) throws SQLException {
+        System.out.print("Ingrese el ID de la noticia que desea dar de baja: ");
+        int id = scanner.nextInt();
+        String sql = "DELETE FROM Noticia WHERE Id = ?";
+        PreparedStatement statement = conn.prepareStatement(sql);
+        statement.setInt(1, id);
+
+        int rowsDeleted = statement.executeUpdate();
+        if (rowsDeleted > 0) {
+            System.out.println("La noticia fue eliminada exitosamente.");
+        } else {
+            System.out.println("No se pudo eliminar la noticia. Verifique el ID proporcionado.");
+        }
+    }
+
+    // Implementa los métodos para modificación y consulta de noticias
+}
