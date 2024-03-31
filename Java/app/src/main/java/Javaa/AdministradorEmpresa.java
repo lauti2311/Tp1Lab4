@@ -30,7 +30,7 @@ public class AdministradorEmpresa {
         System.out.print("Email: ");
         String email = scanner.nextLine();
 
-        String sql = "INSERT INTO Empresa (Denominación, Teléfono, `Horario de Atención`, `Quienes Somos`, Latitud, Longitud, Domicilio, Email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Empresa (Denominacion, Telefono, HorarioAtencion, QuienesSomos, Latitud, Longitud, Domicilio, Email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = conn.prepareStatement(sql);
         statement.setString(1, denominacion);
         statement.setString(2, telefono);

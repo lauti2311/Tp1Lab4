@@ -55,7 +55,7 @@ public class AdministradorNoticia {
         System.out.print("ID de Empresa: ");
         int idEmpresa = scanner.nextInt();
 
-        String sql = "INSERT INTO Noticia (`Título de la noticia`, `Resumen de la Noticia`, `Imagen Noticia`, `Contenido HTML`, Publicada, `Fecha Publicación`, idEmpresa) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Noticia (TituloNoticia, ResumenNoticia, ImagenNoticia, ContenidoHTML, Publicada, FechaPublicacion, idEmpresa) VALUES (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = conn.prepareStatement(sql);
         statement.setString(1, titulo);
         statement.setString(2, resumen);
