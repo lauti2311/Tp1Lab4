@@ -7,23 +7,27 @@ public class Noticia {
     private String titulo;
     private String resumen;
     private String imagen;
-    private String contenidoHtml;
+    private String contenido;
     private char publicada;
     private Date fechaPublicacion;
-    private int idEmpresa;
+    private int idEmpresa; // Clave foránea
+    private String empresa; // Nombre de la empresa asociada
 
-    public Noticia(int id, String titulo, String resumen, String imagen, String contenidoHtml, char publicada,
-                   Date fechaPublicacion, int idEmpresa) {
+    // Constructor
+    public Noticia(int id, String titulo, String resumen, String imagen, String contenido,
+                   char publicada, Date fechaPublicacion, int idEmpresa, String empresa) {
         this.id = id;
         this.titulo = titulo;
         this.resumen = resumen;
         this.imagen = imagen;
-        this.contenidoHtml = contenidoHtml;
+        this.contenido = contenido;
         this.publicada = publicada;
         this.fechaPublicacion = fechaPublicacion;
         this.idEmpresa = idEmpresa;
+        this.empresa = empresa;
     }
 
+    // Getters y setters
     public int getId() {
         return id;
     }
@@ -56,12 +60,12 @@ public class Noticia {
         this.imagen = imagen;
     }
 
-    public String getContenidoHtml() {
-        return contenidoHtml;
+    public String getContenido() {
+        return contenido;
     }
 
-    public void setContenidoHtml(String contenidoHtml) {
-        this.contenidoHtml = contenidoHtml;
+    public void setContenido(String contenido) {
+        this.contenido = contenido;
     }
 
     public char getPublicada() {
@@ -86,5 +90,13 @@ public class Noticia {
 
     public void setIdEmpresa(int idEmpresa) {
         this.idEmpresa = idEmpresa;
+    }
+
+    public String getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(String empresa) {
+        this.empresa = empresa;
     }
 }

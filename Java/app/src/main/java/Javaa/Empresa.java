@@ -1,5 +1,8 @@
 package Javaa;
 
+import java.sql.*;
+import java.util.Scanner;
+
 public class Empresa {
     private int id;
     private String denominacion;
@@ -12,7 +15,7 @@ public class Empresa {
     private String email;
 
     public Empresa(int id, String denominacion, String telefono, String horarioAtencion, String quienesSomos,
-    double latitud, double longitud, String domicilio, String email) {
+                   double latitud, double longitud, String domicilio, String email) {
         this.id = id;
         this.denominacion = denominacion;
         this.telefono = telefono;
@@ -22,78 +25,80 @@ public class Empresa {
         this.longitud = longitud;
         this.domicilio = domicilio;
         this.email = email;
-        }
+    }
 
     public int getId() {
-    return id;
+        return id;
     }
 
     public void setId(int id) {
-    this.id = id;
+        this.id = id;
     }
 
     public String getDenominacion() {
-    return denominacion;
+        return denominacion;
     }
 
     public void setDenominacion(String denominacion) {
-    this.denominacion = denominacion;
+        this.denominacion = denominacion;
     }
 
     public String getTelefono() {
-    return telefono;
+        return telefono;
     }
 
     public void setTelefono(String telefono) {
-    this.telefono = telefono;
+        this.telefono = telefono;
     }
 
     public String getHorarioAtencion() {
-    return horarioAtencion;
+        return horarioAtencion;
     }
 
     public void setHorarioAtencion(String horarioAtencion) {
-    this.horarioAtencion = horarioAtencion;
+        this.horarioAtencion = horarioAtencion;
     }
 
     public String getQuienesSomos() {
-    return quienesSomos;
+        return quienesSomos;
     }
 
     public void setQuienesSomos(String quienesSomos) {
-    this.quienesSomos = quienesSomos;
+        this.quienesSomos = quienesSomos;
     }
 
     public double getLatitud() {
-    return latitud;
+        return latitud;
     }
 
     public void setLatitud(double latitud) {
-    this.latitud = latitud;
+        this.latitud = latitud;
     }
 
     public double getLongitud() {
-    return longitud;
+        return longitud;
     }
 
     public void setLongitud(double longitud) {
-    this.longitud = longitud;
+        this.longitud = longitud;
     }
 
     public String getDomicilio() {
-    return domicilio;
+        return domicilio;
     }
 
     public void setDomicilio(String domicilio) {
-    this.domicilio = domicilio;
+        this.domicilio = domicilio;
     }
 
     public String getEmail() {
-    return email;
+        return email;
     }
 
     public void setEmail(String email) {
-    this.email = email;
+        this.email = email;
     }
 
+    // Getters y Setters
 }
+
