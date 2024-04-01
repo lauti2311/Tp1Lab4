@@ -54,8 +54,9 @@ public class Main {
                 System.out.println("\n1. Alta de Empresa");
                 System.out.println("2. Baja de Empresa");
                 System.out.println("3. Modificación de Empresa");
-                System.out.println("4. Consulta de Empresas");
-                System.out.println("5. Volver");
+                System.out.println("4. Consulta de Empresas Totales");
+                System.out.println("5. Consulta de Empresa por ID");
+                System.out.println("6. Volver");
                 System.out.print("Seleccione una opción: ");
                 int opcion = scanner.nextInt();
                 scanner.nextLine(); // Consumir la nueva línea
@@ -64,8 +65,21 @@ public class Main {
                     case 1:
                         adminEmpresa.altaEmpresa(scanner);
                         break;
-                    // Implementa el resto de las opciones del menú de empresa
+                    case 2:
+                        adminEmpresa.bajaEmpresa(scanner);
+                        break;
+                    case 3:
+                        adminEmpresa.modificarEmpresa(scanner);
+                        break;
+                    case 4:
+                        adminEmpresa.consultarEmpresas();
+                        break;
                     case 5:
+                        System.out.print("Ingrese el ID de la empresa que desea consultar: ");
+                        int id = scanner.nextInt();
+                        adminEmpresa.consultarEmpresaPorId(id);
+                        break;
+                    case 6:
                         return;
                     default:
                         System.out.println("Opción no válida. Intente de nuevo.");
@@ -95,14 +109,7 @@ public class Main {
                     case 2:
                         adminNoticia.bajaNoticia(scanner);
                         break;
-                    case 3:
-                        adminNoticia.modificarNoticia(scanner);
-                        break;
-                    case 4:
-                        System.out.println("Noticias: ");
-                        adminNoticia.mostrarNoticias();
-                        break;
-                    // Implementa el resto de las opciones del menú de noticia
+
                     case 5:
                         return;
                     default:
