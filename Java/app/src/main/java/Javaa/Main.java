@@ -89,38 +89,7 @@ public class Main {
 
         System.out.println("Contenido HTML generado e integrado en index.html");
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//        <-- UTILIZAR ESTE REEMPLAZO DE MAIN PARA PODER CREAR, ELIMINAR, CONSULTAR Y MODIFICAR LAS EMPRESAS Y NOTICIAS POR CONSOLA>
 
 
 //        Connection conn = null;
