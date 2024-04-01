@@ -92,6 +92,16 @@ public class Main {
                     case 1:
                         adminNoticia.altaNoticia(scanner);
                         break;
+                    case 2:
+                        adminNoticia.bajaNoticia(scanner);
+                        break;
+                    case 3:
+                        adminNoticia.modificarNoticia(scanner);
+                        break;
+                    case 4:
+                        System.out.println("Noticias: ");
+                        adminNoticia.mostrarNoticias();
+                        break;
                     // Implementa el resto de las opciones del menú de noticia
                     case 5:
                         return;
