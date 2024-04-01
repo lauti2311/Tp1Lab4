@@ -109,7 +109,12 @@ public class Main {
                     case 2:
                         adminNoticia.bajaNoticia(scanner);
                         break;
-
+                    case 3:
+                        adminNoticia.modificarNoticia(scanner);
+                        break;
+                    case 4:
+                        adminNoticia.mostrarNoticias();
+                        break;
                     case 5:
                         return;
                     default:
