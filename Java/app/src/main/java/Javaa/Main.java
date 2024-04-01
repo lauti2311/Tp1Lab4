@@ -109,7 +109,7 @@ public class Main {
                     case 2:
                         adminNoticia.bajaNoticia(scanner);
                         break;
-                        //completar los case :D
+
                     case 5:
                         return;
                     default:

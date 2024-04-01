@@ -2,8 +2,6 @@ package Javaa;
 
 import java.sql.*;
 import java.util.Scanner;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AdministradorNoticia {
     private Connection conn;
@@ -12,64 +10,79 @@ public class AdministradorNoticia {
         this.conn = conn;
     }
 
-    public List<Noticia> obtenerNoticias() throws SQLException {
-        List<Noticia> noticias = new ArrayList<>();
-        String sql = "SELECT n.*, e.Denominación AS Empresa " +
-                "FROM Noticia n " +
-                "JOIN Empresa e ON n.idEmpresa = e.Id";
-        try (Statement statement = conn.createStatement();
-             ResultSet resultSet = statement.executeQuery(sql)) {
-            while (resultSet.next()) {
-                int id = resultSet.getInt("Id");
-                String titulo = resultSet.getString("Título de la noticia");
-                String resumen = resultSet.getString("Resumen de la Noticia");
-                String imagen = resultSet.getString("Imagen Noticia");
-                String contenido = resultSet.getString("Contenido HTML");
-                char publicada = resultSet.getString("Publicada").charAt(0);
-                Date fechaPublicacion = resultSet.getDate("Fecha Publicación");
-                int idEmpresa = resultSet.getInt("idEmpresa");
-                String empresa = resultSet.getString("Empresa");
+    public void altaNoticia(Scanner scanner) {
+        try {
 
-                Noticia noticia = new Noticia(id, titulo, resumen, imagen, contenido,
-                        publicada, fechaPublicacion, idEmpresa, empresa);
-                noticias.add(noticia);
+            System.out.println("\nIngrese los datos de la noticia:");
+            System.out.print("Título: ");
+            String titulo = validarCampo("Título", scanner.nextLine());
+            System.out.print("Resumen: ");
+            String resumen = validarCampo("Resumen", scanner.nextLine());
+            System.out.print("Imagen: ");
+            String imagen = validarCampo("Imagen", scanner.nextLine());
+            System.out.print("Contenido HTML: ");
+            String contenido = validarCampo("Contenido HTML", scanner.nextLine());
+            System.out.print("Publicada (Y/N): ");
+            char publicada = validarPublicada(scanner.nextLine().toLowerCase()); // Convertir a minúsculas
+            System.out.print("Fecha de Publicación (YYYY-MM-DD): ");
+            String fechaPublicacion = validarFecha(scanner.nextLine());
+
+            String sql = "INSERT INTO Noticia (TituloNoticia, ResumenNoticia, ImagenNoticia, ContenidoHTML, Publicada, FechaPublicacion) VALUES (?, ?, ?, ?, ?, ?)";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, titulo);
+            statement.setString(2, resumen);
+            statement.setString(3, imagen);
+            statement.setString(4, contenido);
+            statement.setString(5, String.valueOf(publicada));
+            statement.setDate(6, Date.valueOf(fechaPublicacion));
+
+            int rowsInserted = statement.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("La noticia fue insertada exitosamente.");
+            } else {
+                System.out.println("No se pudo insertar la noticia.");
             }
+        } catch (SQLException e) {
+            System.out.println("Error al insertar la noticia: " + e.getMessage());
+        } catch (CampoInvalidoException e) {
+            System.out.println("Error en el campo '" + e.getCampo() + "': " + e.getMessage());
         }
-        return noticias;
     }
 
-    public void altaNoticia(Scanner scanner) throws SQLException {
-        System.out.println("\nIngrese los datos de la noticia:");
-        System.out.print("Título: ");
-        String titulo = scanner.nextLine();
-        System.out.print("Resumen: ");
-        String resumen = scanner.nextLine();
-        System.out.print("Imagen: ");
-        String imagen = scanner.nextLine();
-        System.out.print("Contenido HTML: ");
-        String contenido = scanner.nextLine();
-        System.out.print("Publicada (Y/N): ");
-        char publicada = scanner.nextLine().charAt(0);
-        System.out.print("Fecha de Publicación (YYYY-MM-DD): ");
-        String fechaPublicacion = scanner.nextLine();
-        System.out.print("ID de Empresa: ");
-        int idEmpresa = scanner.nextInt();
+    private String validarCampo(String nombreCampo, String valor) throws CampoInvalidoException {
+        if (valor.isEmpty()) {
+            throw new CampoInvalidoException(nombreCampo, "El campo no puede estar vacío");
+        }
+        return valor;
+    }
 
-        String sql = "INSERT INTO Noticia (TituloNoticia, ResumenNoticia, ImagenNoticia, ContenidoHTML, Publicada, FechaPublicacion, idEmpresa) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        PreparedStatement statement = conn.prepareStatement(sql);
-        statement.setString(1, titulo);
-        statement.setString(2, resumen);
-        statement.setString(3, imagen);
-        statement.setString(4, contenido);
-        statement.setString(5, String.valueOf(publicada));
-        statement.setDate(6, Date.valueOf(fechaPublicacion));
-        statement.setInt(7, idEmpresa);
+    private char validarPublicada(String valor) throws CampoInvalidoException {
+        if (valor.isEmpty() || (valor.charAt(0) != 'y' && valor.charAt(0) != 'n')) { // Permitir 'y' o 'n' en minúsculas
+            throw new CampoInvalidoException("Publicada", "El valor debe ser 'Y' o 'N'");
+        }
+        return valor.charAt(0);
+    }
 
-        int rowsInserted = statement.executeUpdate();
-        if (rowsInserted > 0) {
-            System.out.println("La noticia fue insertada exitosamente.");
-        } else {
-            System.out.println("No se pudo insertar la noticia.");
+    private String validarFecha(String valor) throws CampoInvalidoException {
+        try {
+            Date.valueOf(valor);
+            return valor;
+        } catch (IllegalArgumentException e) {
+            throw new CampoInvalidoException("Fecha de Publicación", "Formato de fecha incorrecto (debe ser YYYY-MM-DD)");
+        }
+    }
+
+
+    class CampoInvalidoException extends Exception {
+        private String campo;
+
+    public CampoInvalidoException(String campo, String mensaje) {
+        super(mensaje);
+        this.campo = campo;
+    }
+
+    public String getCampo() {
+        return campo;
         }
     }
 
@@ -88,5 +101,81 @@ public class AdministradorNoticia {
         }
     }
 
-    // Implementa los métodos para modificación y consulta de noticias
+    public void mostrarNoticias() throws SQLException {
+        String sql = "SELECT * FROM Noticia";
+        PreparedStatement statement = conn.prepareStatement(sql);
+        ResultSet rs = statement.executeQuery();
+
+        boolean noticiasEncontradas = false;
+
+        while (rs.next()) {
+            noticiasEncontradas = true;
+
+            int id = rs.getInt("Id");
+            String titulo = rs.getString("TituloNoticia");
+            String resumen = rs.getString("ResumenNoticia");
+            String imagen = rs.getString("ImagenNoticia");
+            String contenido = rs.getString("ContenidoHTML");
+            char publicada = rs.getString("Publicada").charAt(0);
+            String fechaPublicacion = rs.getString("FechaPublicacion");
+
+            System.out.println("ID: " + id);
+            System.out.println("Título: " + titulo);
+            System.out.println("Resumen: " + resumen);
+            System.out.println("Imagen: " + imagen);
+            System.out.println("Contenido HTML: " + contenido);
+            System.out.println("Publicada: " + publicada);
+            System.out.println("Fecha de Publicación: " + fechaPublicacion);
+            System.out.println("----------------------");
+        }
+
+        if (!noticiasEncontradas) {
+            System.out.println("No hay noticias existentes.");
+        }
+    }
+
+    public void modificarNoticia(Scanner scanner) {
+        try {
+            System.out.print("Ingrese el ID de la noticia que desea modificar: ");
+            int id = scanner.nextInt();
+            scanner.nextLine(); // Limpiar el buffer del scanner
+
+            System.out.println("\nIngrese los nuevos datos de la noticia:");
+            System.out.print("Título: ");
+            String titulo = validarCampo("Título", scanner.nextLine());
+            System.out.print("Resumen: ");
+            String resumen = validarCampo("Resumen", scanner.nextLine());
+            System.out.print("Imagen: ");
+            String imagen = validarCampo("Imagen", scanner.nextLine());
+            System.out.print("Contenido HTML: ");
+            String contenido = validarCampo("Contenido HTML", scanner.nextLine());
+            System.out.print("Publicada (Y/N): ");
+            char publicada = validarPublicada(scanner.nextLine().toLowerCase());
+            System.out.print("Fecha de Publicación (YYYY-MM-DD): ");
+            String fechaPublicacion = validarFecha(scanner.nextLine());
+
+            String sql = "UPDATE Noticia SET TituloNoticia = ?, ResumenNoticia = ?, ImagenNoticia = ?, ContenidoHTML = ?, Publicada = ?, FechaPublicacion = ? WHERE Id = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, titulo);
+            statement.setString(2, resumen);
+            statement.setString(3, imagen);
+            statement.setString(4, contenido);
+            statement.setString(5, String.valueOf(publicada));
+            statement.setDate(6, Date.valueOf(fechaPublicacion));
+            statement.setInt(7, id);
+
+            int rowsUpdated = statement.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("La noticia fue modificada exitosamente.");
+            } else {
+                System.out.println("No se pudo modificar la noticia. Verifique el ID proporcionado.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al modificar la noticia: " + e.getMessage());
+        } catch (CampoInvalidoException e) {
+            System.out.println("Error en el campo '" + e.getCampo() + "': " + e.getMessage());
+        }
+    }
+
+
 }
