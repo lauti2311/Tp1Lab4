@@ -44,7 +44,7 @@
       <div class="container top-sect">
         <div class="navbar-header">
           <h1 class="navbar-brand">
-            <a data-type='rd-navbar-brand'  href="./">Denominacion</a>
+            <a data-type='rd-navbar-brand'  href="./"><p id="denominacion"></p></a>
           </h1>
           <a class="search-form_toggle" href="#"></a>
         </div>
@@ -191,6 +191,38 @@
     <script src="js/tm-scripts.js"></script>    
   <!-- </script> -->
 
+  <script>
+
+function obtenerIdDeURL() {
+  // Obtener la URL actual
+  const url = window.location.href;
+  // Buscar el índice del parámetro "id" en la URL
+  const index = url.indexOf('id=');
+  // Verificar si se encontró el parámetro "id"
+  if (index !== -1) {
+    // Obtener el valor del parámetro "id"
+    const id = url.substring(index + 3);
+    return id;
+  } else {
+    // Devolver null si el parámetro "id" no está presente en la URL
+    return null;
+  }
+}
+
+// Llamar a la función y mostrar el valor del parámetro "id" en la consola
+const idEmpresa = obtenerIdDeURL();
+
+
+      //const idEmpresa = 3; // Aquí debes proporcionar el ID de la empresa deseada
+        fetch(`/empresas/${idEmpresa}`)
+          .then(response => response.json())
+          .then(data => {
+        document.getElementById('denominacion').textContent = data.denominacion || 'Empresa no encontrada';
+      })
+
+      .catch(error => console.error('Error al obtener la denominación de la empresa:', error));
+
+  </script>
 
   </body>
 </html>
