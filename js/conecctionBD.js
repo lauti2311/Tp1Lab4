@@ -1,7 +1,9 @@
 const express = require('express');
 const mysql = require('mysql');
+const bodyParser = require('body-parser'); 
 
 const app = express();
+app.use(bodyParser.urlencoded({ extended: true })); 
 
 // Configuración de la conexión a la base de datos
 const connection = mysql.createConnection({
@@ -11,29 +13,75 @@ const connection = mysql.createConnection({
   database: 'Fcaultad'
 });
 
-// Conectar a la base de datos
-connection.connect((err) => {
-  if (err) {
-    console.error('Error al conectar a la base de datos: ' + err.stack);
-    return;
-  }
-  console.log('Conexión a la base de datos exitosa con el ID: ' + connection.threadId);
-
-  // Aquí puedes realizar consultas a la base de datos
-
-  // Consulta SQL para obtener la denominación de la empresa con ID 
-  const sql = 'SELECT Denominacion FROM Empresa WHERE id = ?';
-  const idEmpresa = 3;
-
-  connection.query(sql, [idEmpresa], (err, result) => {
+// Ruta para obtener las empresas desde la base de datos
+app.get('/empresas', (req, res) => {
+  connection.query('SELECT id, Denominacion FROM Empresa', (err, results) => {
     if (err) {
-      console.error('Error al ejecutar la consulta: ' + err.stack);
-      return;
+      console.error('Error al obtener empresas: ' + err.stack);
+      return res.status(500).json({ error: 'Error al obtener empresas' });
     }
-    console.log('La denominación de la empresa con ID ' + idEmpresa + ' es: ' + result[0].Denominacion);
-
-    connection.end();
+    res.json(results);
   });
 });
 
- 
+// Ruta para manejar la solicitud de envío del formulario de empresas
+app.post('/enviar_empresa', (req, res) => {
+  const datosFormulario = req.body;
+
+  // Insertar datos en la tabla de empresas en la base de datos
+  const sql = 'INSERT INTO Empresa (Denominacion, Telefono, HorarioAtencion, QuienesSomos, Latitud, Longitud, Domicilio, Email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+  const valores = [
+    datosFormulario.denominacion,
+    datosFormulario.telefono,
+    datosFormulario.horario,
+    datosFormulario.quienes_somos,
+    datosFormulario.latitud,
+    datosFormulario.longitud,
+    datosFormulario.domicilio,
+    datosFormulario.email
+  ];
+
+  connection.query(sql, valores, (err, result) => {
+    if (err) {
+      console.error('Error al insertar datos en la base de datos: ' + err.stack);
+      return res.status(500).send('Error al enviar el formulario de empresa');
+    }
+    console.log('Datos insertados correctamente en la base de datos');
+    res.send('¡Formulario de empresa enviado correctamente!');
+  });
+});
+
+// Ruta para manejar la solicitud de envío del formulario de noticias
+app.post('/enviar_noticia', (req, res) => {
+  const datosFormulario = req.body;
+
+  // Insertar datos en la tabla de noticias en la base de datos
+  const sql = 'INSERT INTO Noticia (TituloNoticia, ResumenNoticia, ImagenNoticia, ContenidoHTML, Publicada, FechaPublicacion, idEmpresa) VALUES (?, ?, ?, ?, ?, ?, ?)';
+  const valores = [
+    datosFormulario.titulo,
+    datosFormulario.resumen,
+    datosFormulario.imagen,
+    datosFormulario.contenido,
+    datosFormulario.publicada ? 1 : 0, 
+    datosFormulario.fecha,
+    datosFormulario.empresa
+  ];
+
+  connection.query(sql, valores, (err, result) => {
+    if (err) {
+      console.error('Error al insertar datos en la base de datos: ' + err.stack);
+      return res.status(500).send('Error al enviar el formulario de noticia');
+    }
+    console.log('Datos insertados correctamente en la base de datos');
+    res.send('¡Formulario de noticia enviado correctamente!');
+  });
+});
+
+// Servir archivos estáticos desde el directorio 'public'
+app.use(express.static('public'));
+
+// Iniciar el servidor
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor Express en funcionamiento en el puerto ${PORT}`);
+});

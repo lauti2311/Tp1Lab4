@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario de Noticia</title>
+<link rel="stylesheet" href="css/estilosNoticia.css"> <!-- Enlace al archivo CSS -->
+</head>
+<body>
+
+<div class="container">
+  <h1>Formulario de Noticia</h1>
+  <form id="formulario" method="POST" action="/enviar_noticia">
+    <label for="titulo">Título de la Noticia:</label>
+    <input type="text" id="titulo" name="titulo" required>
+    
+    <label for="resumen">Resumen de la Noticia:</label>
+    <input type="text" id="resumen" name="resumen" required>
+    
+    <label for="imagen">Imagen de la Noticia:</label>
+    <input type="text" id="imagen" name="imagen" placeholder="Dirección de la imagen">
+    
+    <label for="contenido">Contenido HTML:</label>
+    <textarea id="contenido" name="contenido" required></textarea>
+    
+    <label for="publicada">Publicada:</label>
+    <input type="checkbox" id="publicada" name="publicada">
+    
+    <label for="fecha">Fecha de Publicación:</label>
+    <input type="date" id="fecha" name="fecha">
+    
+    <label for="empresa">Empresa:</label>
+    <select id="empresa" name="empresa">
+      <!-- Opciones llenadas dinámicamente por JavaScript -->
+    </select>
+    
+    <input type="submit" value="Enviar">
+  </form>
+</div>
+
+<script>
+  // JavaScript para llenar dinámicamente las opciones del menú desplegable de empresas
+  document.addEventListener('DOMContentLoaded', () => {
+    fetch('/empresas') // Hacer una solicitud GET al servidor para obtener las empresas
+      .then(response => response.json()) // Convertir la respuesta a JSON
+      .then(data => {
+        const selectElement = document.getElementById('empresa'); // Obtener el elemento select
+        data.forEach(empresa => {
+          const option = document.createElement('option'); // Crear una nueva opción
+          option.value = empresa.id; // Asignar el valor del ID de la empresa
+          option.textContent = empresa.Denominacion; // Asignar el texto de la empresa
+          selectElement.appendChild(option); // Agregar la opción al menú desplegable
+        });
+      })
+      .catch(error => console.error('Error al obtener las empresas:', error)); // Manejar errores
+  });
+</script>
+
+</body>
+</html>
