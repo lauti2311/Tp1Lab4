@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Main {
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://localhost:3306/Fcaultad";
+    static final String DB_URL = "jdbc:mysql://localhost/Fcaultad";
     static final String USER = "root";
     static final String PASS = "root";
 
@@ -64,9 +64,6 @@ public class Main {
                     case 1:
                         adminEmpresa.altaEmpresa(scanner);
                         break;
-                    case 2:
-                        adminEmpresa.bajaEmpresa(scanner);
-                        break;
                     // Implementa el resto de las opciones del menú de empresa
                     case 5:
                         return;
@@ -94,13 +91,7 @@ public class Main {
                 switch (opcion) {
                     case 1:
                         adminNoticia.altaNoticia(scanner);
-
                         break;
-                    case 2:
-                        adminNoticia.bajaNoticia(scanner);
-                        break;
-                    case 3:
-                        adminNoticia.obtenerNoticias();
                     // Implementa el resto de las opciones del menú de noticia
                     case 5:
                         return;
