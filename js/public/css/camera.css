@@ -5,9 +5,9 @@
 =========================================================*/
 .camera_container {
   position: relative;
-  padding-bottom: 29.75609756%;
+  padding: 1%;
   margin-bottom: 30px;
-}
+  }
 @media (max-width: 1176.2295082px) {
   .camera_container {
     padding-bottom: 350px;
