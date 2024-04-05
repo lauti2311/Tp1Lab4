@@ -68,10 +68,20 @@ app.post('/enviar_empresa', (req, res) => {
   connection.query(sql, valores, (err, result) => {
     if (err) {
       console.error('Error al insertar datos en la base de datos: ' + err.stack);
-      return res.status(500).send('Error al enviar el formulario de empresa');
+      return res.status(500).send(`
+        <div style="text-align: center; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+          <p style="font-family: Arial, sans-serif; color: red;">Error al enviar el formulario de empresa</p>
+          <button style="background-color: #007bff; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;" onclick="window.location.href = 'http://localhost:3000/admin.html';">Volver</button>
+        </div>
+      `);
     }
     console.log('Datos insertados correctamente en la base de datos');
-    res.redirect('/admin.html');
+    res.send(`
+      <div style="text-align: center; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <p style="font-family: Arial, sans-serif; color: green;">¡Formulario de empresa enviado correctamente!</p>
+        <button style="background-color: #007bff; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;" onclick="window.location.href = 'http://localhost:3000/admin.html';">Volver</button>
+      </div>
+    `);
   });
 });
 
@@ -94,10 +104,20 @@ app.post('/enviar_noticia', (req, res) => {
   connection.query(sql, valores, (err, result) => {
     if (err) {
       console.error('Error al insertar datos en la base de datos: ' + err.stack);
-      return res.status(500).send('Error al enviar el formulario de noticia');
+      return res.status(500).send(`
+        <div style="text-align: center; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+          <p style="font-family: Arial, sans-serif; color: red;">Error al enviar formulario de noticia</p>
+          <button style="background-color: #007bff; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;" onclick="window.location.href = 'http://localhost:3000/admin.html';">Volver</button>
+        </div>
+      `);
     }
     console.log('Datos insertados correctamente en la base de datos');
-    res.redirect('/admin.html');
+    res.send(`
+      <div style="text-align: center; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <p style="font-family: Arial, sans-serif; color: green;">¡Formulario de noticia enviado correctamente!</p>
+        <button style="background-color: #007bff; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;" onclick="window.location.href = 'http://localhost:3000/admin.html';">Volver</button>
+      </div>
+    `);
   });
 });
 
