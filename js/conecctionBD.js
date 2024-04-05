@@ -3,6 +3,41 @@ const mysql = require('mysql');
 const bodyParser = require('body-parser'); 
 
 const app = express();
+
+// Definir la ruta para eliminar una empresa por su ID
+app.delete('/empresas/:id', (req, res) => {
+  const empresaId = req.params.id; // Obtener el ID de la empresa de la URL
+
+  // Ejecutar la consulta SQL para eliminar la empresa de la base de datos
+  const sql = `DELETE FROM Empresa WHERE id = ?`;
+  connection.query(sql, [empresaId], (error, results) => {
+    if (error) {
+      // Enviar una respuesta de error si ocurre un error al ejecutar la consulta
+      res.status(500).json({ error: 'Error al eliminar la empresa' });
+    } else {
+      // Enviar una respuesta de éxito si la empresa se eliminó correctamente
+      res.status(200).json({ message: 'Empresa eliminada correctamente' });
+    }
+  });
+});
+
+// Ruta para eliminar noticias por el ID de la empresa
+app.delete('/empresas/:id/noticias', (req, res) => {
+  const idEmpresa = req.params.id; // Obtener el ID de la empresa de la URL
+
+  // Ejecutar la consulta SQL para eliminar las noticias de la empresa de la base de datos
+  const sql = `DELETE FROM Noticia WHERE idEmpresa = ?`;
+  connection.query(sql, [idEmpresa], (error, results) => {
+    if (error) {
+      // Enviar una respuesta de error si ocurre un error al ejecutar la consulta
+      res.status(500).json({ error: 'Error al eliminar las noticias de la empresa' });
+    } else {
+      // Enviar una respuesta de éxito si las noticias se eliminaron correctamente
+      res.status(200).json({ message: 'Noticias eliminadas correctamente' });
+    }
+  });
+});
+
 app.use(bodyParser.urlencoded({ extended: true })); 
 
 // Configuración de la conexión a la base de datos
@@ -36,7 +71,7 @@ app.post('/enviar_empresa', (req, res) => {
       return res.status(500).send('Error al enviar el formulario de empresa');
     }
     console.log('Datos insertados correctamente en la base de datos');
-    res.send('¡Formulario de empresa enviado correctamente!');
+    res.redirect('/admin.html');
   });
 });
 
@@ -62,7 +97,7 @@ app.post('/enviar_noticia', (req, res) => {
       return res.status(500).send('Error al enviar el formulario de noticia');
     }
     console.log('Datos insertados correctamente en la base de datos');
-    res.send('¡Formulario de noticia enviado correctamente!');
+    res.redirect('/admin.html');
   });
 });
 
