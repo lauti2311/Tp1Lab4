@@ -50,7 +50,7 @@ app.post('/enviar_noticia', (req, res) => {
     datosFormulario.titulo,
     datosFormulario.resumen,
     datosFormulario.imagen,
-    datosFormulario.contenido,
+    datosFormulario.contenidoHTML,
     datosFormulario.publicada ? 1 : 0, 
     datosFormulario.fecha,
     datosFormulario.empresa

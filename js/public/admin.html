@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de Administración</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+  }
+  .container {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  h1 {
+    text-align: center;
+  }
+  form {
+    margin-bottom: 20px;
+  }
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #0056b3;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  th, td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+  }
+  th {
+    background-color: #f2f2f2;
+  }
+  td button {
+    margin-right: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Panel de Administración</h1>
+
+  <h2>Listado de Empresas</h2>
+  <table>
+    <tr>
+      <th>Nombre de la Empresa</th>
+      <th>Acciones</th>
+    </tr>
+    <!-- Aquí puedes generar dinámicamente filas para cada empresa -->
+    <tr>
+      <td>Prueba 1</td>
+      <td>
+        <button onclick="location.href='administrarNoticia.html'">Agregar Noticia</button>
+        <button>Modificar</button>
+        <button>Eliminar</button>
+      </td>
+    </tr>
+    <!-- Repite este bloque para cada empresa -->
+  </table>
+
+  <div class="add-link">
+    <a href="administrarEmpresa.html">Agregar Empresa</a>
+  </div>
+</div>
+
+</body>
+</html>
