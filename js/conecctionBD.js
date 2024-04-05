@@ -99,6 +99,17 @@ app.get('/empresas/:id', (req, res) => {
     });
   });
 });
+app.get('/noticias', (req, res) => {
+  connection.query('SELECT TituloNoticia, ResumenNoticia FROM Noticia WHERE Publicada = 1', (err, results) => {
+    if (err) {
+      console.error('Error al obtener noticias: ' + err.stack);
+      return res.status(500).json({ error: 'Error al obtener noticias' });
+    }
+    res.json(results);
+  });
+});
+
+
 
 
 // Servir archivos estáticos desde el directorio 'public'
