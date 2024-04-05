@@ -57,8 +57,8 @@
         </div>
 
         <div class="help-box text-right">
-          <p>Telefono</p>
-          <a href="callto:#">0810-222-3232</a>
+          <p>Teléfono</p>
+          <p id="telefono" href="callto:#"></p>
           <small><span>Horario:</span> 6am-4pm PST M-Th; &nbsp;6am-3pm PST Fri</small>
         </div>
       </div>
@@ -209,30 +209,30 @@
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get(parametro);
     }
-
+  
     const idEmpresa = obtenerParametroDeURL('id');
-
+  
     fetch(`/empresas/${idEmpresa}`)
       .then(response => response.json())
       .then(data => {
         document.getElementById('denominacion').textContent = data.denominacion || 'Empresa no encontrada';
         document.getElementById('quienesSomos').textContent = data.quienesSomos || 'Descripción no disponible';
+        document.getElementById('telefono').textContent = data.telefono || 'Teléfono no disponible';
         document.getElementById('horario').textContent = data.horario || 'Horario no disponible';
-        document.getElementById('telefono').textContent = data.telefono || 'Telefono no disponible';
         document.getElementById('latitud').textContent = data.Latitud;
         document.getElementById('longitud').textContent = data.Longitud;
-
+  
         // Obtener la latitud y longitud de la empresa
         const latitud = parseFloat(data.Latitud);
         const longitud = parseFloat(data.Longitud);
         const coord = { lat: latitud, lng: longitud };
-
+  
         // Inicializar el mapa
         const map = new google.maps.Map(document.getElementById('map'), {
           zoom: 15,
           center: coord
         });
-
+  
         // Colocar un marcador en la ubicación de la empresa
         const marker = new google.maps.Marker({
           position: coord,
