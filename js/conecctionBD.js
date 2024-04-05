@@ -116,7 +116,7 @@ app.get('/empresas/:id', (req, res) => {
   const idEmpresa = req.params.id;
 
   // Consultar la base de datos para obtener la información de la empresa por su ID
-  const sql = 'SELECT Denominacion, QuienesSomos, Telefono FROM Empresa WHERE id = ?';
+  const sql = 'SELECT Denominacion, QuienesSomos, Telefono, HorarioAtencion FROM Empresa WHERE id = ?';
   connection.query(sql, [idEmpresa], (err, result) => {
     if (err) {
       console.error('Error al obtener la información de la empresa: ' + err.stack);
@@ -130,20 +130,50 @@ app.get('/empresas/:id', (req, res) => {
     res.json({ 
       denominacion: empresaInfo.Denominacion, 
       quienesSomos: empresaInfo.QuienesSomos,
-      telefono: empresaInfo.Telefono // Nombre de propiedad corregido
+      telefono: empresaInfo.Telefono,
+      horarioAtencion: empresaInfo.HorarioAtencion
     });
   });
 });
-app.get('/noticias', (req, res) => {
-  connection.query('SELECT TituloNoticia, ResumenNoticia FROM Noticia WHERE Publicada = 1', (err, results) => {
+app.get('/empresas/:id/noticias', (req, res) => {
+  const idEmpresa = req.params.id;
+
+  // Consultar la base de datos para obtener las noticias de la empresa por su ID
+  const sql = 'SELECT TituloNoticia, ResumenNoticia FROM Noticia WHERE idEmpresa = ? AND Publicada = 1';
+  connection.query(sql, [idEmpresa], (err, results) => {
     if (err) {
-      console.error('Error al obtener noticias: ' + err.stack);
-      return res.status(500).json({ error: 'Error al obtener noticias' });
+      console.error('Error al obtener noticias de la empresa: ' + err.stack);
+      return res.status(500).json({ error: 'Error al obtener noticias de la empresa' });
     }
     res.json(results);
   });
 });
+app.get('/empresas/:idEmpresa/noticias/:idNoticia', (req, res) => {
+  const idEmpresa = req.params.idEmpresa;
+  const idNoticia = req.params.idNoticia;
 
+  // Consultar la base de datos para obtener la noticia específica por su ID y el ID de la empresa
+  const sql = 'SELECT e.Denominacion AS Denominacion, n.TituloNoticia, n.ResumenNoticia, n.ImagenNoticia, n.ContenidoHTML, n.FechaPublicacion FROM Noticia n INNER JOIN Empresa e ON n.idEmpresa = e.id WHERE n.idEmpresa = ? AND n.id = ?';
+  connection.query(sql, [idEmpresa, idNoticia], (err, result) => {
+    if (err) {
+      console.error('Error al obtener la información de la noticia: ' + err.stack);
+      return res.status(500).json({ error: 'Error al obtener la información de la noticia' });
+    }
+    if (result.length === 0) {
+      return res.status(404).json({ error: 'Noticia no encontrada' });
+    }
+    // El resultado es un array, debes acceder al primer elemento para obtener los datos
+    const noticiaInfo = result[0];
+    res.json({ 
+      denominacionEmpresa: noticiaInfo.DenominacionEmpresa,
+      titulo: noticiaInfo.TituloNoticia, 
+      resumen: noticiaInfo.ResumenNoticia,
+      imagen: noticiaInfo.ImagenNoticia,
+      contenidoHTML: noticiaInfo.ContenidoHTML,
+      fechaPublicacion: noticiaInfo.FechaPublicacion
+    });
+  });
+});
 
 
 

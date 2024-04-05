@@ -59,7 +59,10 @@
         <div class="help-box text-right">
           <p>Teléfono</p>
           <p id="telefono" href="callto:#"></p>
-          <small><span>Horario:</span> 6am-4pm PST M-Th; &nbsp;6am-3pm PST Fri</small>
+          <small style="font-size: 14px; color: #666;">
+            <span class="horario" style="font-weight: bold;">Horario:</span>
+            <small><span id="horarioAtencion" class="horario" style="color: #666; font-size: 14px; font-family: Arial, sans-serif;"></span></small>
+          </small>
         </div>
       </div>
 
@@ -143,7 +146,7 @@
       }
     </script>
     <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCL4K_zdlTob_VSL_Y8sgQtWSlwSW5z-Ew&callback=iniciarMap"
+      src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=iniciarMap"
       async defer></script>
 
     <section class="well1">
@@ -179,7 +182,7 @@
         document.getElementById('denominacion').textContent = data.denominacion || 'Empresa no encontrada';
         document.getElementById('quienesSomos').textContent = data.quienesSomos || 'Descripción no disponible';
         document.getElementById('telefono').textContent = data.telefono || 'Teléfono no disponible';
-        document.getElementById('horario').textContent = data.horario || 'Horario no disponible';
+        document.getElementById('horarioAtencion').textContent = data.horarioAtencion || 'Horario no disponible';
         document.getElementById('latitud').textContent = data.Latitud;
         document.getElementById('longitud').textContent = data.Longitud;
   
@@ -202,6 +205,11 @@
         });
       })
       .catch(error => console.error('Error al obtener la información de la empresa:', error));
+
+    // Función para obtener los datos de la noticia y redirigir al detalle
+    function irADetalle(idNoticia) {
+      window.location.href = `detalle.html?idEmpresa=${idEmpresa}&idNoticia=${idNoticia}`;
+    }
   </script>
 
 <!-- Incluye jQuery (necesario para Owl Carousel) -->
@@ -210,44 +218,45 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 <!-- Configura el Owl Carousel -->
 <script>
-  fetch('/noticias')
+  // Hacer la solicitud de las noticias específicas de la empresa
+  fetch(`/empresas/${idEmpresa}/noticias`)
     .then(response => response.json())
     .then(noticias => {
-        const carouselContainer = document.getElementById('carouselNoticias');
-        // Iterar sobre cada noticia y crear un elemento para agregar al carrusel
-        noticias.forEach(noticia => {
-            const item = document.createElement('div');
-            item.classList.add('item');
-            item.innerHTML = `
-                <img src="imagenes/page-1_slide1.jpg" alt="${noticia.TituloNoticia}">
-                <div class="title">
-                    <div class="jumbotron jumbotron1">
-                        <em><a href="detalle.html">${noticia.TituloNoticia}</a></em>
-                        <div class="wrap">
-                            <p>${noticia.ResumenNoticia}</p>
-                            <a href="detalle.html" class="btn-link fa-angle-right"></a>
-                        </div>
-                    </div>
-                </div>
-            `;
-            carouselContainer.appendChild(item);
-        });
-        // Configurar el carrusel una vez que se han agregado todos los elementos
-        configurarCarrusel();
+      const carouselContainer = document.getElementById('carouselNoticias');
+      // Iterar sobre cada noticia y crear un elemento para agregar al carrusel
+      noticias.forEach(noticia => {
+        const item = document.createElement('div');
+        item.classList.add('item');
+        item.innerHTML = `
+          <img src="imagenes/page-1_slide1.jpg" alt="${noticia.TituloNoticia}">
+          <div class="title">
+            <div class="jumbotron jumbotron1">
+              <em><a href="#" onclick="irADetalle(${noticia.id})">${noticia.TituloNoticia}</a></em>
+              <div class="wrap">
+                <p>${noticia.ResumenNoticia}</p>
+                <a href="#" onclick="irADetalle(${noticia.id})">Leer más</a>
+              </div>
+            </div>
+          </div>
+        `;
+        carouselContainer.appendChild(item);
+      });
+      // Configurar el carrusel una vez que se han agregado todos los elementos
+      configurarCarrusel();
     })
     .catch(error => console.error('Error al obtener noticias:', error));
 
-// Función para configurar el carrusel una vez que se han agregado todos los elementos
-function configurarCarrusel() {
+  // Función para configurar el carrusel una vez que se han agregado todos los elementos
+  function configurarCarrusel() {
     $(".owl-carousel").owlCarousel({
-        items: 1,
-        loop: true,
-        autoplay: true,
-        autoplayTimeout: 5000, // Cambia cada 5 segundos
-        autoplayHoverPause: true // Pausa al pasar el mouse sobre el carrusel
-        // Otros ajustes de Owl Carousel si los necesitas
+      items: 1,
+      loop: true,
+      autoplay: true,
+      autoplayTimeout: 5000, // Cambia cada 5 segundos
+      autoplayHoverPause: true // Pausa al pasar el mouse sobre el carrusel
+      // Otros ajustes de Owl Carousel si los necesitas
     });
-}
+  }
 </script>
 
 
