@@ -1,0 +1,28 @@
+.imagen_home{
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  height: auto;
+  }
+
+  .imagen_home .title {
+    position: absolute;
+    top: 40%;
+    left: 55%; 
+    transform: translate(-50%, -50%); 
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    padding: 10px;
+    width: 90%; 
+    box-sizing: border-box;
+    text-align: center; 
+  }
+  
+
+.imagen_home .jumbotron{
+  padding: 10px;
+  margin-bottom: 30px;
+  color: inherit;
+  background-color: #eee;
+  background: rgba(33, 194, 248, 0.8);
+}

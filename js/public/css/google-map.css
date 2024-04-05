@@ -5,6 +5,7 @@
   position: relative;
 }
 .map_model {
+  width: 80%;
   height: 586px;
 }
 .map_model img {

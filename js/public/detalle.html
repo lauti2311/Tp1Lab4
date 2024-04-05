@@ -92,7 +92,7 @@
         <div class="container">
 			<center>
 				<div id="imagenPrincipal" style="height: 450px; background-image: url('http://localhost:82/template_html/images/page-1_slide1.jpg?1583775512626'); background-repeat: no-repeat;background-size: cover;">
-					<div style="text-align:left; background-color: rgba(1,1,1,0.5);color: #ffffff;font-size: 16px;line-height: 50px;">
+					<div style="text-align:right; background-color: rgba(1,1,1,0.5);color: #ffffff;font-size: 16px;line-height: 50px;">
 					 Titulo de la Noticia                        
 					</div>
 				</div>
@@ -147,5 +147,43 @@
 
 <!-- coded by vitlex -->
 
+
+<script>
+  function obtenerParametroDeURL(parametro) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(parametro);
+  }
+
+  const idEmpresa = obtenerParametroDeURL('id');
+
+  fetch(`/empresas/${idEmpresa}`)
+.then(response => response.json())
+.then(data => {
+  document.getElementById('denominacion').textContent = data.denominacion || 'Empresa no encontrada';
+  document.getElementById('quienesSomos').textContent = data.quienesSomos || 'Descripción no disponible';
+  document.getElementById('horario').textContent = data.horario || 'Horario no disponible';
+  document.getElementById('latitud').textContent = data.Latitud;
+  document.getElementById('longitud').textContent = data.Longitud;
+
+          // Obtener la latitud y longitud de la empresa
+          const latitud = parseFloat(data.Latitud);
+          const longitud = parseFloat(data.Longitud);
+          const coord = { lat: latitud, lng: longitud };
+
+          // Inicializar el mapa
+          const map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 15,
+              center: coord
+          });
+
+          // Colocar un marcador en la ubicación de la empresa
+          const marker = new google.maps.Marker({
+              position: coord,
+              map: map,
+              title: data.Denominacion || 'Ubicación de la empresa'
+          });
+      })
+      .catch(error => console.error('Error al obtener la información de la empresa:', error));
+</script>
   </body>
 </html>
