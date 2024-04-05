@@ -7,8 +7,8 @@
 
   .imagen_home .title {
     position: absolute;
-    top: 40%;
-    left: 55%; 
+    top: 50%;
+    left: 50%; 
     transform: translate(-50%, -50%); 
     background-color: rgba(255, 255, 255, 0.15);
     color: #fff;
@@ -26,3 +26,4 @@
   background-color: #eee;
   background: rgba(33, 194, 248, 0.8);
 }
+

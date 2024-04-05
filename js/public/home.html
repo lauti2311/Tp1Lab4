@@ -9,6 +9,8 @@
   <meta name="format-detection" content="telephone=no" />
   <link rel="icon" href="images/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="css/homecss.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
   <title>HOME</title>
 
   <!-- Bootstrap -->
@@ -56,8 +58,7 @@
 
         <div class="help-box text-right">
           <p>Telefono</p>
-          <a href="callto:#">      <p id="telefono"></p>
-          </a>
+          <a href="callto:#">0810-222-3232</a>
           <small><span>Horario:</span> 6am-4pm PST M-Th; &nbsp;6am-3pm PST Fri</small>
         </div>
       </div>
@@ -91,64 +92,53 @@
     <!--========================================================
                             CONTENT
   =========================================================-->
-
   <main>
     <div>
       <section class="well well1 well1_ins1">
-        <div class="camera_container">
-          <!-- <div id="camera" class="camera_wrap"> -->
-            <div class="imagen_home">
-              <div class="title">
-                <div class="jumbotron jumbotron1">
-                  <em>
-                    <a href="detalle.html">Titulo Noticia</a>
-                  </em>
-                  <div class="wrap">
-                    <p>
-                      Resumen
-                    </p>
-                    <a href="detalle.html" class="btn-link fa-angle-right"></a>
-                  </div>
-                </div>
-              </div>
-              <img src="imagenes/page-1_slide1.jpg"> 
-            </div>
-            <div>
-              <!-- <div class="camera_caption fadeIn">
-                <div class="jumbotron jumbotron1">
-                  <em>
-                    <a href="detalle.html">Titulo Noticia</a>
-                  </em>
-                  <div class="wrap">
-                    <p>
-                      Resumen
-                    </p>
-                    <a href="detalle.html" class="btn-link fa-angle-right"></a>
-                  </div>
-                </div>
-              </div> -->
-            </div>
-            
-            <div data-src="images/page-1_slide3.jpg">
-              <div class="camera_caption fadeIn">
-                <div class="jumbotron">
-                  <em>
-                    Titulo Noticia
-                  </em>
-                  <div class="wrap">
-                    <p>
-                      Resumen
-                    </p>
-                    <a href="#" class="btn-link fa-angle-right"></a>
-                  </div>
+        <!-- Aquí agregamos el div del carrousel -->
+        <div class="owl-carousel owl-theme">
+          <div class="item">
+            <img src="imagenes/page-1_slide1.jpg" alt="Slide 1">
+            <div class="title">
+              <div class="jumbotron jumbotron1">
+                <em><a href="detalle.html">Titulo Noticia</a></em>
+                <div class="wrap">
+                  <p>Resumen</p>
+                  <a href="detalle.html" class="btn-link fa-angle-right"></a>
                 </div>
               </div>
             </div>
-          <!-- </div> -->
+          </div>
+          <!-- Repite este bloque para cada slide -->
+          <div class="item">
+            <img src="imagenes/page-1_slide2.jpg" alt="Slide 2">
+            <div class="title">
+              <div class="jumbotron jumbotron1">
+                <em><a href="detalle.html">Titulo Noticia</a></em>
+                <div class="wrap">
+                  <p>Resumen</p>
+                  <a href="detalle.html" class="btn-link fa-angle-right"></a>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="item">
+            <img src="imagenes/page-1_slide3.jpg" alt="Slide 3">
+            <div class="title">
+              <div class="jumbotron jumbotron1">
+                <em><a href="detalle.html">Titulo Noticia</a></em>
+                <div class="wrap">
+                  <p>Resumen</p>
+                  <a href="detalle.html" class="btn-link fa-angle-right"></a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
-
-      <section class="well well2 wow fadeIn  bg1" data-wow-duration='3s'>
+  
+      <section class="well well2 wow fadeIn bg1" data-wow-duration='3s'>
         <div class="container">
           <h2 class="txt-pr">
             Quienes Somos
@@ -156,7 +146,7 @@
           <div class="row">
             <div class="col">
               <p id="quienesSomos" style="text-align:justify">
-
+  
               </p>
             </div>
           </div>
@@ -165,46 +155,46 @@
     </div>
   </main>
 
-    <!--========================================================
+  <!--========================================================
                             FOOTER
   =========================================================-->
-    <footer class="top-border">
-      <section class="well well2 wow fadeIn  bg1" data-wow-duration='3s'>
-        <div class="container">
-          <h2 class="txt-pr">
-            Donde estamos
-          </h2>
-        </div>
-      </section>
-      <div id="map" style="height: 400px;"></div>
+  <footer class="top-border">
+    <section class="well well2 wow fadeIn  bg1" data-wow-duration='3s'>
+      <div class="container">
+        <h2 class="txt-pr">
+          Donde estamos
+        </h2>
+      </div>
+    </section>
+    <div id="map" style="height: 400px;"></div>
 
-      <script>
-        function iniciarMap() {
-          var coord = { lat: -32.88154997304907, lng: -68.83492456656404 };
-          var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 15,
-            center: coord
-          });
-          var marker = new google.maps.Marker({
-            position: coord,
-            map: map
-          });
-        }
-      </script>
-      <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCL4K_zdlTob_VSL_Y8sgQtWSlwSW5z-Ew&callback=iniciarMap"
-        async defer></script>
+    <script>
+      function iniciarMap() {
+        var coord = { lat: -32.88154997304907, lng: -68.83492456656404 };
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 15,
+          center: coord
+        });
+        var marker = new google.maps.Marker({
+          position: coord,
+          map: map
+        });
+      }
+    </script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCL4K_zdlTob_VSL_Y8sgQtWSlwSW5z-Ew&callback=iniciarMap"
+      async defer></script>
 
-      <section class="well1">
-        <div class="container">
-          <p class="rights">
-            Denominación Empresa &#169; <span id="copyright-year"></span>
-            <a href="index-5.html">Privacy Policy</a>
-            <!-- {%FOOTER_LINK} -->
-          </p>
-        </div>
-      </section>
-    </footer>
+    <section class="well1">
+      <div class="container">
+        <p class="rights">
+          Denominación Empresa &#169; <span id="copyright-year"></span>
+          <a href="index-5.html">Privacy Policy</a>
+          <!-- {%FOOTER_LINK} -->
+        </p>
+      </div>
+    </section>
+  </footer>
   </div>
 
 
@@ -252,6 +242,24 @@
       })
       .catch(error => console.error('Error al obtener la información de la empresa:', error));
   </script>
+
+<!-- Incluye jQuery (necesario para Owl Carousel) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Incluye el JavaScript de Owl Carousel -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<!-- Configura el Owl Carousel -->
+<script>
+  $(document).ready(function(){
+    $(".owl-carousel").owlCarousel({
+      items: 1,
+      loop: true,
+      autoplay: true,
+      autoplayTimeout: 5000, // Cambia cada 5 segundos
+      autoplayHoverPause: true // Pausa al pasar el mouse sobre el carrusel
+      // Otros ajustes de Owl Carousel si los necesitas
+    });
+  });
+</script>
 
 </body>
 

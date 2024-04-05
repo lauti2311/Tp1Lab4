@@ -41,7 +41,7 @@
       <div class="container top-sect">
         <div class="navbar-header">
           <h1 class="navbar-brand">
-            <a data-type='rd-navbar-brand'  href="./"><small>Denominación <br>Empresa</small></a>
+            <a data-type='rd-navbar-brand'  href="./"><p id="denominacion"></p></small></a>
           </h1>
           <a class="search-form_toggle" href="#"></a>
         </div>
@@ -91,22 +91,22 @@
 		
         <div class="container">
 			<center>
-				<div id="imagenPrincipal" style="height: 450px; background-image: url('http://localhost:82/template_html/images/page-1_slide1.jpg?1583775512626'); background-repeat: no-repeat;background-size: cover;">
-					<div style="text-align:right; background-color: rgba(1,1,1,0.5);color: #ffffff;font-size: 16px;line-height: 50px;">
+				<div id="imagenNoticia" style="height: 450px; background-image: url('http://localhost:3000/template_html/images/page-1_slide1.jpg?1583775512626'); background-repeat: no-repeat;background-size: cover;">
+					<div style="text-align:right; background-color: rgba(1,1,1,0.5);color: #ffffff;font-size: 16px;line-height: 50px;" id="titulo">
 					 Titulo de la Noticia                        
 					</div>
 				</div>
 			</center>
-		  <h2>
+		  <h2 id="titulo">
             Titulo de la Noticia
           </h2>
-		  Fecha Publicacion: 12/02/2020
+		         <p id="fechaPublicacion"></p>
 		  <hr>
           <div class="row offs2">
             
             <div class="col-lg-12">
               <dl class="terms-list">
-                <dt>
+                <dt id="resumenNoticia">
 					Resumen de la noticia
                 </dt>
 				<hr>
@@ -160,28 +160,11 @@
 .then(response => response.json())
 .then(data => {
   document.getElementById('denominacion').textContent = data.denominacion || 'Empresa no encontrada';
-  document.getElementById('quienesSomos').textContent = data.quienesSomos || 'Descripción no disponible';
-  document.getElementById('horario').textContent = data.horario || 'Horario no disponible';
-  document.getElementById('latitud').textContent = data.Latitud;
-  document.getElementById('longitud').textContent = data.Longitud;
-
-          // Obtener la latitud y longitud de la empresa
-          const latitud = parseFloat(data.Latitud);
-          const longitud = parseFloat(data.Longitud);
-          const coord = { lat: latitud, lng: longitud };
-
-          // Inicializar el mapa
-          const map = new google.maps.Map(document.getElementById('map'), {
-              zoom: 15,
-              center: coord
-          });
-
-          // Colocar un marcador en la ubicación de la empresa
-          const marker = new google.maps.Marker({
-              position: coord,
-              map: map,
-              title: data.Denominacion || 'Ubicación de la empresa'
-          });
+  document.getElementById('titulo').textContent = data.titulo || 'Titulo no encontrado';
+  document.getElementById('resumenNoticia').textContent = data.resumenNoticia || 'Resumen no disponible';
+  document.getElementById('imagenNoticia').textContent = data.imagenNoticia || 'Imagen no disponible';
+  document.getElementById('publicada').textContent = data.publicada;
+  document.getElementById('fechaPublicacion').textContent = data.fechaPublicacion;
       })
       .catch(error => console.error('Error al obtener la información de la empresa:', error));
 </script>
