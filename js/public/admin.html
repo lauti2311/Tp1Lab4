@@ -36,15 +36,17 @@
     border-radius: 4px;
     box-sizing: border-box;
   }
-  button {
+  button, .add-link a { /* Aplicar el mismo estilo de botón a los enlaces */
     background-color: #007bff;
     color: #fff;
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    text-decoration: none; /* Eliminar la subrayado en los enlaces */
+    margin-right: 10px; /* Añadir margen a los botones */
   }
-  button:hover {
+  button:hover, .add-link a:hover {
     background-color: #0056b3;
   }
   table {
@@ -63,35 +65,121 @@
   td button {
     margin-right: 10px;
   }
+  .add-link { /* Estilo para el contenedor de agregar empresa */
+    margin-bottom: 10px; /* Añadir espacio debajo del enlace */
+  }
+  .add-link a:first-child { /* Estilo para el primer enlace dentro de .add-link (Agregar Empresa) */
+    margin-right: 10px; /* Añadir margen a la derecha */
+  }
+  .add-link a:last-child { /* Estilo para el último enlace dentro de .add-link (Volver) */
+    float: right; /* Mover a la derecha */
+  }
 </style>
 </head>
 <body>
 
-<div class="container">
-  <h1>Panel de Administración</h1>
-
-  <h2>Listado de Empresas</h2>
-  <table>
-    <tr>
-      <th>Nombre de la Empresa</th>
-      <th>Acciones</th>
-    </tr>
-    <!-- Aquí puedes generar dinámicamente filas para cada empresa -->
-    <tr>
-      <td>Prueba 1</td>
-      <td>
-        <button onclick="location.href='administrarNoticia.html'">Agregar Noticia</button>
-        <button>Modificar</button>
-        <button>Eliminar</button>
-      </td>
-    </tr>
-    <!-- Repite este bloque para cada empresa -->
-  </table>
-
-  <div class="add-link">
-    <a href="administrarEmpresa.html">Agregar Empresa</a>
+  <div class="container">
+    <h1>Panel de Administración</h1>
+  
+    <h2>Listado de Empresas</h2>
+    <table id="tablaEmpresas">
+      <tr>
+        <th>Nombre de la Empresa</th>
+        <th>Acciones</th>
+      </tr>
+    </table>
+  
+    <div class="add-link">
+      <a href="administrarEmpresa.html">Agregar Empresa</a>
+      <a href="index.html">Volver</a>
+    </div>
   </div>
-</div>
+
+  <script>
+    fetch('/empresas')
+      .then(response => response.json())
+      .then(empresas => {
+        const tablaEmpresas = document.getElementById('tablaEmpresas');
+        empresas.forEach(empresa => {
+          const row = document.createElement('tr');
+          
+          // Columna para el nombre de la empresa
+          const nombreCell = document.createElement('td');
+          nombreCell.textContent = empresa.Denominacion; // Actualizado a Denominacion
+          row.appendChild(nombreCell);
+          
+          // Columna para las acciones
+          const accionesCell = document.createElement('td');
+          
+          // Botón para agregar noticia
+          const agregarNoticiaBtn = document.createElement('button');
+          agregarNoticiaBtn.textContent = 'Agregar Noticia';
+          agregarNoticiaBtn.onclick = function() {
+            location.href = `administrarNoticia.html?id=${empresa.id}`;
+          };
+          accionesCell.appendChild(agregarNoticiaBtn);
+          
+          // Botón para modificar
+          const modificarBtn = document.createElement('button');
+          modificarBtn.textContent = 'Modificar';
+          modificarBtn.onclick = function() {
+            // Agregar lógica para el botón Modificar si es necesario
+            console.log('Modificar empresa:', empresa.id);
+          };
+          accionesCell.appendChild(modificarBtn);
+          
+
+          // Botón para eliminar
+          const eliminarBtn = document.createElement('button');
+          eliminarBtn.textContent = 'Eliminar';
+          eliminarBtn.setAttribute('data-id', empresa.id); // Asignar el ID de la empresa como un atributo personalizado
+          eliminarBtn.onclick = function() {
+            const id = this.getAttribute('data-id'); // Obtener el ID de la empresa desde el atributo personalizado
+  
+          // Hacer una solicitud DELETE al servidor para eliminar las noticias asociadas a la empresa
+          fetch(`/empresas/${id}/noticias`, {
+            method: 'DELETE'
+          })
+
+          .then(response => {
+            if (response.ok) {
+            // Si las noticias se eliminan correctamente, hacer una solicitud DELETE para eliminar la empresa
+            fetch(`/empresas/${id}`, {
+              method: 'DELETE'
+            })
+
+          .then(response => {
+            if (response.ok) {
+              console.log('La empresa se eliminó correctamente');
+              // Recargar la página para reflejar los cambios
+            location.reload();
+          } else {
+            console.error('Error al eliminar la empresa');
+          }
+          })
+
+          .catch(error => {
+            console.error('Error al eliminar la empresa:', error);
+          });
+          } else {
+            console.error('Error al eliminar las noticias asociadas a la empresa');
+          }
+          })
+          .catch(error => {
+            console.error('Error al eliminar las noticias asociadas a la empresa:', error);
+          });
+};
+accionesCell.appendChild(eliminarBtn);
+          
+          // Agregar las acciones a la fila
+          row.appendChild(accionesCell);
+          
+          // Agregar la fila a la tabla
+          tablaEmpresas.appendChild(row);
+        });
+      })
+      .catch(error => console.error('Error al obtener las empresas:', error));
+  </script>
 
 </body>
 </html>
