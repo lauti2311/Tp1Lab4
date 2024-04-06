@@ -21,6 +21,24 @@ app.delete('/empresas/:id', (req, res) => {
   });
 });
 
+// Agregar una ruta para eliminar noticias por su ID
+app.delete('/noticias/:id', (req, res) => {
+  const noticiaId = req.params.id; // Obtener el ID de la noticia de la URL
+
+  // Ejecutar la consulta SQL para eliminar la noticia de la base de datos
+  const sql = `DELETE FROM Noticia WHERE id = ?`;
+  connection.query(sql, [noticiaId], (error, results) => {
+    if (error) {
+      // Enviar una respuesta de error si ocurre un error al ejecutar la consulta
+      res.status(500).json({ error: 'Error al eliminar la noticia' });
+    } else {
+      // Enviar una respuesta de éxito si la noticia se eliminó correctamente
+      res.status(200).json({ message: 'Noticia eliminada correctamente' });
+    }
+  });
+});
+
+
 // Ruta para eliminar noticias por el ID de la empresa
 app.delete('/empresas/:id/noticias', (req, res) => {
   const idEmpresa = req.params.id; // Obtener el ID de la empresa de la URL
