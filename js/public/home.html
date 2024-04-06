@@ -228,7 +228,7 @@
         const item = document.createElement('div');
         item.classList.add('item');
         item.innerHTML = `
-          <img src="imagenes/page-1_slide1.jpg" alt="${noticia.TituloNoticia}">
+          <img src="${noticia.ImagenNoticia}" alt="${noticia.TituloNoticia}" style="max-width: 2050px; max-height: 670px; width: auto; height: auto;">
           <div class="title">
             <div class="jumbotron jumbotron1">
               <em><a href="#" onclick="irADetalle(${noticia.id})">${noticia.TituloNoticia}</a></em>
