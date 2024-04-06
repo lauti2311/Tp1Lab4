@@ -159,7 +159,7 @@ app.get('/empresas/:id/noticias', (req, res) => {
   const idEmpresa = req.params.id;
 
   // Consultar la base de datos para obtener las noticias de la empresa por su ID
-  const sql = 'SELECT TituloNoticia, ResumenNoticia FROM Noticia WHERE idEmpresa = ? AND Publicada = 1';
+  const sql = 'SELECT TituloNoticia, ResumenNoticia, ImagenNoticia FROM Noticia WHERE idEmpresa = ? AND Publicada = 1';
   connection.query(sql, [idEmpresa], (err, results) => {
     if (err) {
       console.error('Error al obtener noticias de la empresa: ' + err.stack);
@@ -173,7 +173,7 @@ app.get('/empresas/:idEmpresa/noticias/:idNoticia', (req, res) => {
   const idNoticia = req.params.idNoticia;
 
   // Consultar la base de datos para obtener la noticia específica por su ID y el ID de la empresa
-  const sql = 'SELECT e.Denominacion AS Denominacion, n.TituloNoticia, n.ResumenNoticia, n.ImagenNoticia, n.ContenidoHTML, n.FechaPublicacion FROM Noticia n INNER JOIN Empresa e ON n.idEmpresa = e.id WHERE n.idEmpresa = ? AND n.id = ?';
+  const sql = 'SELECT e.Denominacion AS DenominacionEmpresa, n.TituloNoticia, n.ResumenNoticia, n.ImagenNoticia, n.ContenidoHTML, n.FechaPublicacion FROM Noticia n INNER JOIN Empresa e ON n.idEmpresa = e.id WHERE n.idEmpresa = ? AND n.id = ?';
   connection.query(sql, [idEmpresa, idNoticia], (err, result) => {
     if (err) {
       console.error('Error al obtener la información de la noticia: ' + err.stack);
