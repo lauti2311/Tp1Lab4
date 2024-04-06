@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lista Empresas</title>
+<link rel="stylesheet" type="text/css" href="/js/public/css/index.css">
+</head>
+
 <style>
   body {
     font-family: Arial, sans-serif;
@@ -23,12 +26,18 @@
     text-align: center;
   }
   table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-  }
+  width: 100%;
+  max-width: 600px; /* Establecer el ancho máximo de la tabla */
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  margin-left: auto; /* Centrar la tabla horizontalmente */
+  margin-right: auto; /* Centrar la tabla horizontalmente */
+  overflow-x: auto; /* Permitir desplazamiento horizontal si la tabla es más ancha que el contenedor */
+  margin: 0 auto; /* Centra la tabla horizontalmente */
+  border-spacing: 0; /* Elimina el espaciado entre las celdas */
+}
   th, td {
-    padding: 10px;
+    padding: 10px 80px;
     border-bottom: 1px solid #ddd;
     text-align: left;
   }
@@ -44,7 +53,7 @@
   }
   button {
     display: block;
-    margin: 0 auto 20px;
+    margin: 30px auto 20px;
     padding: 10px 20px;
     background-color: #007bff;
     color: #fff;
@@ -56,37 +65,49 @@
     background-color: #0056b3;
   }
 </style>
-</head>
+
 <body>
 
-<div class="container">
-  <h1>Lista Empresas</h1>
-
-  <table>
-    <tr>
-      <td><b>EMPRESA</b></td>
-      <td><b>VER PÁGINA</b></td>
-    </tr>
-    <tr>
-      <td>Prueba 1</td>
-      <td><a href="home.html?id=1">URL PÁGINA HOME</a></td>
-    </tr>
-    <tr>
-      <td>Prueba 2</td>
-      <td><a href="home.html?id=2">URL PÁGINA HOME</a></td>
-    </tr>
-    <tr>
-      <td>Prueba 3</td>
-      <td><a href="home.html?id=3">URL PÁGINA HOME</a></td>
-    </tr>
-    <tr>
-      <td>Prueba 4</td>
-      <td><a href="home.html?id=4">URL PÁGINA HOME</a></td>
-    </tr>
-  </table>
-
-  <button onclick="location.href='admin.html'">Panel de Administración</button>
+  <div class="container">
+    <h1>Lista Empresas</h1>
+  
+    <table id="tablaEmpresas">
+      <tr>
+        <td><b>EMPRESA</b></td>
+        <td><b>VER PÁGINA</b></td>
+      </tr>
+    </table>
+  
+    <button onclick="location.href='admin.html'">Panel de Administración</button>
 </div>
+
+<script>
+  fetch('/empresas')
+    .then(response => response.json())
+    .then(empresas => {
+      const tablaEmpresas = document.getElementById('tablaEmpresas');
+      empresas.forEach(empresa => {
+        const row = document.createElement('tr');
+        
+        // Columna para el nombre de la empresa
+        const nombreCell = document.createElement('td');
+        nombreCell.textContent = empresa.Denominacion; // Actualizado a Denominacion
+        row.appendChild(nombreCell);
+        
+        // Columna para el enlace de la página home
+        const verPaginaCell = document.createElement('td');
+        const link = document.createElement('a');
+        link.href = `home.html?id=${empresa.id}`;
+        link.textContent = 'URL PÁGINA HOME';
+        verPaginaCell.appendChild(link);
+        row.appendChild(verPaginaCell);
+        
+        // Agregar la fila a la tabla
+        tablaEmpresas.appendChild(row);
+      });
+    })
+    .catch(error => console.error('Error al obtener las empresas:', error));
+</script>
 
 </body>
 </html>
