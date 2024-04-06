@@ -155,6 +155,7 @@ app.get('/empresas/:id', (req, res) => {
     });
   });
 });
+
 app.get('/empresas/:id/noticias', (req, res) => {
   const idEmpresa = req.params.id;
 
@@ -168,6 +169,7 @@ app.get('/empresas/:id/noticias', (req, res) => {
     res.json(results);
   });
 });
+
 app.get('/empresas/:idEmpresa/noticias/:idNoticia', (req, res) => {
   const idEmpresa = req.params.idEmpresa;
   const idNoticia = req.params.idNoticia;
@@ -194,8 +196,6 @@ app.get('/empresas/:idEmpresa/noticias/:idNoticia', (req, res) => {
     });
   });
 });
-
-
 
 // Servir archivos estáticos desde el directorio 'public'
 app.use(express.static('public'));

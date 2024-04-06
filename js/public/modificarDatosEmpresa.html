@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modificar Datos de Empresa</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+  }
+  .container {
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  h1 {
+    text-align: center;
+  }
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+  }
+  button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #0056b3;
+  }
+</style>
+</head>
+<body>
+
+    <div>
+        <h1>Modificar Datos de la Empresa</h1>
+        <p>Denominación: <span id="denominacion"></span></p>
+        <p>Quiénes Somos: <span id="quienesSomos"></span></p>
+        <p>Teléfono: <span id="telefono"></span></p>
+        <p>Horario de Atención: <span id="horario"></span></p>
+        <p>Latitud: <span id="latitud"></span></p>
+        <p>Longitud: <span id="longitud"></span></p>
+        <p>Domicilio: <span id="domicilio"></span></p>
+        <!-- Agrega un elemento HTML con el id "map" para mostrar el mapa -->
+        <div id="map" style="height: 400px; width: 100%;"></div>
+      </div>
+      
+      <script>
+      function obtenerParametroDeURL(parametro) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(parametro);
+      }
+      
+      const idEmpresa = obtenerParametroDeURL('id');
+      
+      fetch(`/empresas/${idEmpresa}`)
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('denominacion').textContent = data.denominacion || 'Empresa no encontrada';
+          document.getElementById('quienesSomos').textContent = data.quienesSomos || 'Descripción no disponible';
+          document.getElementById('telefono').textContent = data.telefono || 'Teléfono no disponible';
+          document.getElementById('horario').textContent = data.horario || 'Horario no disponible';
+          document.getElementById('latitud').textContent = data.latitud || 'Latitud no disponible';
+          document.getElementById('longitud').textContent = data.longitud || 'Longitud no disponible';
+          document.getElementById('domicilio').textContent = data.domicilio || 'Domicilio no disponible';
+      
+          // Obtener la latitud y longitud de la empresa
+          const latitud = parseFloat(data.latitud);
+          const longitud = parseFloat(data.longitud);
+          const coord = { lat: latitud, lng: longitud };
+      
+          // Inicializar el mapa
+          const map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 15,
+            center: coord
+          });
+      
+          // Colocar un marcador en la ubicación de la empresa
+          const marker = new google.maps.Marker({
+            position: coord,
+            map: map,
+            title: data.denominacion || 'Ubicación de la empresa'
+          });
+        })
+        .catch(error => console.error('Error al obtener la información de la empresa:', error));
+      </script>
+
+</body>
+</html>

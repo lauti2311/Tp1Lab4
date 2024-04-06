@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de Administración</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+  }
+  .container {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    position: relative; /* Añadir posición relativa para el contenedor */
+  }
+  h1 {
+    text-align: center;
+  }
+  form {
+    margin-bottom: 20px;
+  }
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  button, .add-link a { /* Aplicar el mismo estilo de botón a los enlaces */
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none; /* Eliminar la subrayado en los enlaces */
+    margin-right: 10px; /* Añadir margen a los botones */
+  }
+  button:hover, .add-link a:hover {
+    background-color: #0056b3;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  th, td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+  }
+  th {
+    background-color: #f2f2f2;
+  }
+  td button {
+    margin-right: 10px;
+  }
+  .add-link { /* Estilo para el contenedor de agregar empresa */
+    margin-bottom: 10px; /* Añadir espacio debajo del enlace */
+  }
+  .add-link a:first-child { /* Estilo para el primer enlace dentro de .add-link (Agregar Empresa) */
+    margin-right: 10px; /* Añadir margen a la derecha */
+  }
+  .add-link a:last-child { /* Estilo para el último enlace dentro de .add-link (Volver) */
+    float: right; /* Mover a la derecha */
+  }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Panel de Administración</h1>
+
+  <h2>Listado de Noticias</h2>
+  <table id="tablaNoticias">
+      <tr>
+        <th>Título de la Noticia</th>
+        <th>Acciones</th>
+      </tr>
+  </table>
+  
+  <div class="add-link">
+    <a href="admin.html">Volver</a>
+  </div>
+
+</div>
+
+<script>
+// Función para obtener el ID de la empresa de la URL
+function getIdEmpresaFromUrl() {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get('id');
+}
+
+// Obtener el ID de la empresa de la URL
+const idEmpresa = getIdEmpresaFromUrl();
+
+// Si hay un ID de empresa válido, realizar la solicitud para obtener las noticias
+if (idEmpresa) {
+  fetch(`/noticias/${idEmpresa}`) // Asegúrate de que la ruta sea correcta en tu servidor
+    .then(response => response.json())
+    .then(noticias => {
+      const tablaNoticias = document.getElementById('tablaNoticias');
+      noticias.forEach(noticia => {
+        const row = document.createElement('tr');
+
+        // Columna para el título de la noticia
+        const tituloCell = document.createElement('td');
+        tituloCell.textContent = noticia.TituloNoticia;
+        row.appendChild(tituloCell);
+
+        // Columna para las acciones
+        const accionesCell = document.createElement('td');
+
+        // Botón para eliminar
+        const eliminarBtn = document.createElement('button');
+        eliminarBtn.textContent = 'Eliminar';
+        eliminarBtn.onclick = function() {
+          const idNoticia = noticia.Id; // Obtener el ID de la noticia
+          // Hacer una solicitud DELETE al servidor para eliminar la noticia
+          fetch(`/noticias/${idNoticia}`, {
+            method: 'DELETE'
+          })
+          .then(response => {
+            if (response.ok) {
+              console.log('Noticia eliminada correctamente');
+              // Refrescar la página después de eliminar la noticia para reflejar los cambios
+              location.reload();
+            } else {
+              console.error('Error al eliminar la noticia');
+            }
+          })
+          .catch(error => {
+            console.error('Error al eliminar la noticia:', error);
+          });
+        };
+        accionesCell.appendChild(eliminarBtn);
+
+        // Botón para mostrar ID de la noticia
+        const mostrarIdBtn = document.createElement('button');
+        mostrarIdBtn.textContent = 'Mostrar ID';
+        mostrarIdBtn.onclick = function() {
+          alert(`ID de la noticia: ${noticia.Id}`);
+        };
+        accionesCell.appendChild(mostrarIdBtn);
+
+        // Agregar las acciones a la fila
+        row.appendChild(accionesCell);
+
+        // Agregar la fila a la tabla
+        tablaNoticias.appendChild(row);
+      });
+    })
+    .catch(error => console.error('Error al obtener las noticias:', error));
+} else {
+  console.error('ID de empresa no encontrado en la URL');
+}
+  </script>
+
+</body>
+</html>
