@@ -58,7 +58,7 @@
 
         <div class="help-box text-right">
           <p>Teléfono</p>
-          <p id="telefono" href="callto:#"></p>
+          <a id="telefono" href="callto:#"></a>
           <small style="font-size: 14px; color: #666;">
             <span class="horario" style="font-weight: bold;">Horario:</span>
             <small><span id="horarioAtencion" class="horario" style="color: #666; font-size: 14px; font-family: Arial, sans-serif;"></span></small>
@@ -146,13 +146,13 @@
       }
     </script>
     <script
-      src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=iniciarMap"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKSU565DuiSHY3hluAGeD6j_m7jrfKpcU&callback=iniciarMap"
       async defer></script>
 
     <section class="well1">
       <div class="container">
         <p class="rights">
-          Denominación Empresa &#169; <span id="copyright-year"></span>
+          <span id="denominacionEmpresaFooter"></span> &#169; <span id="copyright-year"></span>
           <a href="index-5.html">Privacy Policy</a>
           <!-- {%FOOTER_LINK} -->
         </p>
@@ -180,31 +180,34 @@
       .then(response => response.json())
       .then(data => {
         document.getElementById('denominacion').textContent = data.denominacion || 'Empresa no encontrada';
+        document.getElementById('denominacionEmpresaFooter').textContent = data.denominacion || 'Empresa no encontrada'; // Modificación aquí
         document.getElementById('quienesSomos').textContent = data.quienesSomos || 'Descripción no disponible';
         document.getElementById('telefono').textContent = data.telefono || 'Teléfono no disponible';
         document.getElementById('horarioAtencion').textContent = data.horarioAtencion || 'Horario no disponible';
         document.getElementById('latitud').textContent = data.Latitud;
         document.getElementById('longitud').textContent = data.Longitud;
-  
+
         // Obtener la latitud y longitud de la empresa
         const latitud = parseFloat(data.Latitud);
         const longitud = parseFloat(data.Longitud);
         const coord = { lat: latitud, lng: longitud };
-  
+
         // Inicializar el mapa
         const map = new google.maps.Map(document.getElementById('map'), {
           zoom: 15,
           center: coord
         });
-  
+
         // Colocar un marcador en la ubicación de la empresa
         const marker = new google.maps.Marker({
           position: coord,
           map: map,
           title: data.Denominacion || 'Ubicación de la empresa'
         });
-      })
-      .catch(error => console.error('Error al obtener la información de la empresa:', error));
+
+
+  })
+  .catch(error => console.error('Error al obtener la información de la empresa:', error));
 
     // Función para obtener los datos de la noticia y redirigir al detalle
     function irADetalle(idNoticia) {
