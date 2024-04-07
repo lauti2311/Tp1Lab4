@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="css/camera.css">
   <link rel="stylesheet" href="css/search.css">
   <link rel="stylesheet" href="css/google-map.css">
+  <link rel="stylesheet" href="css/owl-carousel.css">
 
 
   <!--JS-->
@@ -212,7 +213,7 @@
         const item = document.createElement('div');
         item.classList.add('item');
         item.innerHTML = `
-          <img src="${noticia.ImagenNoticia}" alt="${noticia.TituloNoticia}" style="max-width: 2050px; max-height: 670px; width: auto; height: auto;">
+          <img src="${noticia.ImagenNoticia}" alt="${noticia.TituloNoticia}">
           <div class="title">
             <div class="jumbotron jumbotron1">
               <em><a href="#" onclick="irADetalle(${noticia.id})">${noticia.TituloNoticia}</a></em>
