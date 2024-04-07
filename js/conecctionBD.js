@@ -197,11 +197,13 @@ app.get('/empresas/:idEmpresa/noticias/:idNoticia', (req, res) => {
 
 
 
+
+
 // Servir archivos estáticos desde el directorio 'public'
 app.use(express.static('public'));
 
 // Iniciar el servidor
-const PORT = 3000;
+const PORT = 4000;
 app.listen(PORT, () => {
   console.log(`Servidor Express en funcionamiento en el puerto ${PORT}`);
 });
