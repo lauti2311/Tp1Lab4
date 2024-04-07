@@ -133,8 +133,8 @@
     <div id="map" style="height: 400px;"></div>
 
     <script>
-      function iniciarMap() {
-        var coord = { lat: -32.88154997304907, lng: -68.83492456656404 };
+      function iniciarMap(latitud, longitud) {
+        var coord = { lat: latitud, lng: longitud };
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 15,
           center: coord
@@ -146,7 +146,7 @@
       }
     </script>
     <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKSU565DuiSHY3hluAGeD6j_m7jrfKpcU&callback=iniciarMap"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDMd2Vz-sYpeCAzMegLejYS9JVi-_loR4&callback=iniciarMap"
       async defer></script>
 
     <section class="well1">
@@ -184,30 +184,11 @@
         document.getElementById('quienesSomos').textContent = data.quienesSomos || 'Descripción no disponible';
         document.getElementById('telefono').textContent = data.telefono || 'Teléfono no disponible';
         document.getElementById('horarioAtencion').textContent = data.horarioAtencion || 'Horario no disponible';
-        document.getElementById('latitud').textContent = data.Latitud;
-        document.getElementById('longitud').textContent = data.Longitud;
 
-        // Obtener la latitud y longitud de la empresa
-        const latitud = parseFloat(data.Latitud);
-        const longitud = parseFloat(data.Longitud);
-        const coord = { lat: latitud, lng: longitud };
-
-        // Inicializar el mapa
-        const map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 15,
-          center: coord
-        });
-
-        // Colocar un marcador en la ubicación de la empresa
-        const marker = new google.maps.Marker({
-          position: coord,
-          map: map,
-          title: data.Denominacion || 'Ubicación de la empresa'
-        });
-
-
-  })
-  .catch(error => console.error('Error al obtener la información de la empresa:', error));
+        // Llama a la función iniciarMap con las coordenadas de la empresa
+        iniciarMap(parseFloat(data.latitud), parseFloat(data.longitud));
+      })
+      .catch(error => console.error('Error al obtener la información de la empresa:', error));
 
     // Función para obtener los datos de la noticia y redirigir al detalle
     function irADetalle(idNoticia) {

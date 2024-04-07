@@ -136,7 +136,7 @@ app.get('/empresas/:id', (req, res) => {
   const idEmpresa = req.params.id;
 
   // Consultar la base de datos para obtener la información de la empresa por su ID
-  const sql = 'SELECT Denominacion, QuienesSomos, Telefono, HorarioAtencion FROM Empresa WHERE id = ?';
+  const sql = 'SELECT Denominacion, QuienesSomos, Telefono, HorarioAtencion, Latitud, Longitud FROM Empresa WHERE id = ?';
   connection.query(sql, [idEmpresa], (err, result) => {
     if (err) {
       console.error('Error al obtener la información de la empresa: ' + err.stack);
@@ -151,7 +151,9 @@ app.get('/empresas/:id', (req, res) => {
       denominacion: empresaInfo.Denominacion, 
       quienesSomos: empresaInfo.QuienesSomos,
       telefono: empresaInfo.Telefono,
-      horarioAtencion: empresaInfo.HorarioAtencion
+      horarioAtencion: empresaInfo.HorarioAtencion,
+      latitud: empresaInfo.Latitud,
+      longitud: empresaInfo.Longitud
     });
   });
 });
