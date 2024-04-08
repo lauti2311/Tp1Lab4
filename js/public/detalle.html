@@ -103,7 +103,7 @@
     <section class="well">
       <div class="container">
         <p class="rights">
-          Denominación Empresa  &#169; <span id="copyright-year"></span>
+          <span id="denominacionEmpresaFooter"></span> &#169; <span id="copyright-year"></span>
           <a href="index-5.html">Privacy Policy</a>
           <!-- {%FOOTER_LINK} -->
         </p>
@@ -151,6 +151,8 @@ Promise.all([
   document.getElementById('denominacionEmpresa').textContent = empresaInfo.denominacion || 'Empresa no encontrada';
   document.getElementById('telefono').textContent = empresaInfo.telefono || 'Teléfono no disponible';
   document.getElementById('horarioAtencion').textContent = empresaInfo.horarioAtencion || 'Horario no disponible';
+  document.getElementById('denominacionEmpresaFooter').textContent = empresaInfo.denominacion || 'Empresa no encontrada'; // Modificación aquí
+
 
   // Mostrar la información de la noticia
   document.getElementById('tituloNoticia').textContent = noticiaInfo.titulo || 'Titulo no encontrado';

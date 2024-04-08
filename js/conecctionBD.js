@@ -205,7 +205,7 @@ app.get('/empresas/:idEmpresa/noticias/:idNoticia', (req, res) => {
 app.use(express.static('public'));
 
 // Iniciar el servidor
-const PORT = 4000;
+const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Servidor Express en funcionamiento en el puerto ${PORT}`);
 });
