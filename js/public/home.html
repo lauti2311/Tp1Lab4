@@ -240,43 +240,58 @@
 <script>
   // Hacer la solicitud de las noticias específicas de la empresa
   fetch(`/empresas/${idEmpresa}/noticias`)
-    .then(response => response.json())
-    .then(noticias => {
-      const carouselContainer = document.getElementById('carouselNoticias');
-      // Iterar sobre cada noticia y crear un elemento para agregar al carrusel
-      noticias.forEach(noticia => {
-        const item = document.createElement('div');
-        item.classList.add('item');
-        item.innerHTML = `
-          <img src="${noticia.ImagenNoticia}" alt="${noticia.TituloNoticia}">
-          <div class="title">
-            <div class="jumbotron jumbotron1">
-              <em><a href="#" onclick="irADetalle(${noticia.id})">${noticia.TituloNoticia}</a></em>
-              <div class="wrap">
-                <p>${noticia.ResumenNoticia}</p>
-                <a href="#" onclick="irADetalle(${noticia.id})">Leer más</a>
-              </div>
-            </div>
-          </div>
-        `;
-        carouselContainer.appendChild(item);
-      });
-      // Configurar el carrusel una vez que se han agregado todos los elementos
-      configurarCarrusel();
-    })
-    .catch(error => console.error('Error al obtener noticias:', error));
+  .then(response => response.json())
+  .then(noticias => {
+    noticias.sort((a, b) => new Date(b.FechaPublicacion) - new Date(a.FechaPublicacion));
+      
+    // Tomar solo las últimas 5 noticias, si hay más de 5
+    const ultimasNoticias = noticias.slice(0, 6);
 
-  // Función para configurar el carrusel una vez que se han agregado todos los elementos
-  function configurarCarrusel() {
-    $(".owl-carousel").owlCarousel({
-      items: 1,
-      loop: true,
-      autoplay: true,
-      autoplayTimeout: 5000, // Cambia cada 5 segundos
-      autoplayHoverPause: true // Pausa al pasar el mouse sobre el carrusel
-      // Otros ajustes de Owl Carousel si los necesitas
+    // Actualizar el carrusel con las últimas noticias
+    ultimasNoticias.forEach(noticia => {
+      actualizarCarrusel(noticia);
     });
+
+    // Configurar el carrusel una vez que se han agregado todos los elementos
+    configurarCarrusel();
+  })
+  .catch(error => console.error('Error al obtener noticias:', error));
+
+function actualizarCarrusel(noticia) {
+  const carouselContainer = document.getElementById('carouselNoticias');
+  const item = document.createElement('div');
+  item.classList.add('item');
+  item.innerHTML = `
+    <img src="${noticia.ImagenNoticia}" alt="${noticia.TituloNoticia}">
+    <div class="title">
+      <div class="jumbotron jumbotron1">
+        <em><a href="#" onclick="irADetalle(${noticia.id})">${noticia.TituloNoticia}</a></em>
+        <div class="wrap">
+          <p>${noticia.ResumenNoticia}</p>
+          <a href="#" onclick="irADetalle(${noticia.id})">Leer más</a>
+        </div>
+      </div>
+    </div>
+  `;
+  carouselContainer.appendChild(item);
+}
+
+function configurarCarrusel() {
+  $(".owl-carousel").owlCarousel({
+    items: 1,
+    loop: true,
+    autoplay: true,
+    autoplayTimeout: 5000, // Cambia cada 5 segundos
+    autoplayHoverPause: true // Pausa al pasar el mouse sobre el carrusel
+    // Otros ajustes de Owl Carousel si los necesitas
+  });
+
+  // Eliminar la última noticia del carrusel
+  const owlCarousel = $(".owl-carousel").data('owl.carousel');
+  if (owlCarousel) {
+    owlCarousel.remove(owlCarousel.items().length - 1);
   }
+}
 </script>
 
 

@@ -90,8 +90,8 @@ app.post('/enviar_noticia', (req, res) => {
   const datosFormulario = req.body;
 
   // Insertar datos en la tabla de noticias en la base de datos
-  const sql = 'INSERT INTO Noticia (TituloNoticia, ResumenNoticia, ImagenNoticia, ContenidoHTML, Publicada, FechaPublicacion, idEmpresa) VALUES (?, ?, ?, ?, ?, ?, ?)';
-  const valores = [
+  const sqlInsert = 'INSERT INTO Noticia (TituloNoticia, ResumenNoticia, ImagenNoticia, ContenidoHTML, Publicada, FechaPublicacion, idEmpresa) VALUES (?, ?, ?, ?, ?, ?, ?)';
+  const valoresInsert = [
     datosFormulario.titulo,
     datosFormulario.resumen,
     datosFormulario.imagen,
@@ -101,7 +101,7 @@ app.post('/enviar_noticia', (req, res) => {
     datosFormulario.empresa
   ];
 
-  connection.query(sql, valores, (err, result) => {
+  connection.query(sqlInsert, valoresInsert, (err, result) => {
     if (err) {
       console.error('Error al insertar datos en la base de datos: ' + err.stack);
       return res.status(500).send(`
@@ -111,15 +111,49 @@ app.post('/enviar_noticia', (req, res) => {
         </div>
       `);
     }
-    console.log('Datos insertados correctamente en la base de datos');
-    res.send(`
-      <div style="text-align: center; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-        <p style="font-family: Arial, sans-serif; color: green;">¡Formulario de noticia enviado correctamente!</p>
-        <button style="background-color: #007bff; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;" onclick="window.location.href = 'http://localhost:3000/admin.html';">Volver</button>
-      </div>
-    `);
+
+    // Verificar si hay más de 5 noticias para esta empresa y eliminar la más antigua si es necesario
+    const sqlCount = 'SELECT COUNT(*) AS total FROM Noticia WHERE idEmpresa = ?';
+    connection.query(sqlCount, [datosFormulario.empresa], (err, resultCount) => {
+      if (err) {
+        console.error('Error al contar las noticias de la empresa: ' + err.stack);
+        return res.status(500).json({ error: 'Error al contar las noticias de la empresa' });
+      }
+      
+      const totalNoticias = resultCount[0].total;
+
+      if (totalNoticias > 5) {
+        // Obtener la ID de la noticia más antigua para esta empresa
+        const sqlOldestNewsId = 'SELECT id FROM Noticia WHERE idEmpresa = ? ORDER BY FechaPublicacion ASC LIMIT 1';
+        connection.query(sqlOldestNewsId, [datosFormulario.empresa], (err, resultOldest) => {
+          if (err) {
+            console.error('Error al obtener la noticia más antigua: ' + err.stack);
+            return res.status(500).json({ error: 'Error al obtener la noticia más antigua' });
+          }
+
+            // Envía una respuesta de éxito después de eliminar la noticia más antigua
+            res.send(`
+              <div style="text-align: center; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                <p style="font-family: Arial, sans-serif; color: green;">¡Formulario de noticia enviado correctamente!</p>
+                <button style="background-color: #007bff; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;" onclick="window.location.href = 'http://localhost:3000/admin.html';">Volver</button>
+              </div>
+            `);
+        });
+      } else {
+        console.log('Datos insertados correctamente en la base de datos');
+        // Envía una respuesta de éxito si no se eliminó ninguna noticia
+        res.send(`
+          <div style="text-align: center; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <p style="font-family: Arial, sans-serif; color: green;">¡Formulario de noticia enviado correctamente!</p>
+            <button style="background-color: #007bff; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;" onclick="window.location.href = 'http://localhost:3000/admin.html';">Volver</button>
+          </div>
+        `);
+      }
+    });
   });
 });
+
+
 
 // Ruta para obtener las empresas desde la base de datos
 app.get('/empresas', (req, res) => {
@@ -160,8 +194,8 @@ app.get('/empresas/:id', (req, res) => {
 app.get('/empresas/:id/noticias', (req, res) => {
   const idEmpresa = req.params.id;
 
-  // Consultar la base de datos para obtener las noticias de la empresa por su ID
-  const sql = 'SELECT TituloNoticia, ResumenNoticia, ImagenNoticia, id FROM Noticia WHERE idEmpresa = ? AND Publicada = 1';
+  // Consultar la base de datos para obtener las noticias de la empresa por su ID en orden descendente
+  const sql = 'SELECT TituloNoticia, ResumenNoticia, ImagenNoticia, id FROM Noticia WHERE idEmpresa = ? AND Publicada = 1 ORDER BY FechaPublicacion DESC';
   connection.query(sql, [idEmpresa], (err, results) => {
     if (err) {
       console.error('Error al obtener noticias de la empresa: ' + err.stack);
