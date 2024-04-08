@@ -161,7 +161,7 @@ app.get('/empresas/:id/noticias', (req, res) => {
   const idEmpresa = req.params.id;
 
   // Consultar la base de datos para obtener las noticias de la empresa por su ID
-  const sql = 'SELECT TituloNoticia, ResumenNoticia, ImagenNoticia FROM Noticia WHERE idEmpresa = ? AND Publicada = 1';
+  const sql = 'SELECT TituloNoticia, ResumenNoticia, ImagenNoticia, id FROM Noticia WHERE idEmpresa = ? AND Publicada = 1';
   connection.query(sql, [idEmpresa], (err, results) => {
     if (err) {
       console.error('Error al obtener noticias de la empresa: ' + err.stack);
@@ -199,11 +199,13 @@ app.get('/empresas/:idEmpresa/noticias/:idNoticia', (req, res) => {
 
 
 
+
+
 // Servir archivos estáticos desde el directorio 'public'
 app.use(express.static('public'));
 
 // Iniciar el servidor
-const PORT = 3000;
+const PORT = 4000;
 app.listen(PORT, () => {
   console.log(`Servidor Express en funcionamiento en el puerto ${PORT}`);
 });

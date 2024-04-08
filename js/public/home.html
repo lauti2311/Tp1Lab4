@@ -165,8 +165,14 @@
 
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="js/jquery.js"></script>
+  <script src="js/jquery-migrate-1.2.1.min.js"></script>
+  <script src="js/rd-smoothscroll.min.js"></script>
+  <script src="js/device.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
   <script src="js/tm-scripts.js"></script>
+  
+  
   <!-- </script> -->
 
   <script>
@@ -193,15 +199,44 @@
 
     // Función para obtener los datos de la noticia y redirigir al detalle
     function irADetalle(idNoticia) {
+      const idEmpresa = obtenerParametroDeURL('id');
       window.location.href = `detalle.html?idEmpresa=${idEmpresa}&idNoticia=${idNoticia}`;
     }
   </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Seleccionar todos los elementos con la clase 'titulo-noticia'
+        const titulosNoticia = document.querySelectorAll('.titulo-noticia');
+  
+        // Agregar un controlador de eventos click a cada título de noticia
+        titulosNoticia.forEach(titulo => {
+          titulo.addEventListener('click', function() {
+            // Obtener el ID de la noticia del atributo de datos 'data-id'
+            const idNoticia = this.dataset.id;
+  
+            // Redirigir a la página de detalle con el ID de la noticia
+            irADetalle(idNoticia);
+          });
+        });
+      });
+  
+      // Función para redirigir a la página de detalle con el ID de la noticia
+      function irADetalle(idNoticia) {
+        // Obtener el ID de la empresa de la URL actual
+        const idEmpresa = obtenerParametroDeURL('id');
+        const idNoticia = obtenerParametroDeURL('id');
+  
+        // Redirigir a la página de detalle con los parámetros necesarios
+        window.location.href = `detalle.html?idEmpresa=${idEmpresa}&idNoticia=${idNoticia}`;
+      }
+    </script>
 
 <!-- Incluye jQuery (necesario para Owl Carousel) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <!-- Incluye el JavaScript de Owl Carousel -->
 <script src="//cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 <!-- Configura el Owl Carousel -->
+<!-- Configurar el carrusel una vez que se han agregado todos los elementos -->
 <script>
   // Hacer la solicitud de las noticias específicas de la empresa
   fetch(`/empresas/${idEmpresa}/noticias`)
@@ -243,6 +278,7 @@
     });
   }
 </script>
+
 
 
 </body>
