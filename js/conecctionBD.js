@@ -159,7 +159,7 @@ app.get('/empresas/:id/noticias', (req, res) => {
   const idEmpresa = req.params.id;
 
   // Consultar la base de datos para obtener las noticias de la empresa por su ID
-  const sql = 'SELECT TituloNoticia, ResumenNoticia, ImagenNoticia FROM Noticia WHERE idEmpresa = ? AND Publicada = 1';
+  const sql = 'SELECT TituloNoticia, ResumenNoticia, ImagenNoticia, id FROM Noticia WHERE idEmpresa = ? AND Publicada = 1';
   connection.query(sql, [idEmpresa], (err, results) => {
     if (err) {
       console.error('Error al obtener noticias de la empresa: ' + err.stack);

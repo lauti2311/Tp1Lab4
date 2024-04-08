@@ -146,7 +146,7 @@
       }
     </script>
     <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKSU565DuiSHY3hluAGeD6j_m7jrfKpcU&callback=iniciarMap"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDMd2Vz-sYpeCAzMegLejYS9JVi-_loR4&callback=iniciarMap"
       async defer></script>
 
     <section class="well1">
@@ -164,8 +164,14 @@
 
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="js/jquery.js"></script>
+  <script src="js/jquery-migrate-1.2.1.min.js"></script>
+  <script src="js/rd-smoothscroll.min.js"></script>
+  <script src="js/device.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
   <script src="js/tm-scripts.js"></script>
+  
+  
   <!-- </script> -->
 
   <script>
@@ -211,6 +217,7 @@
 
     // Función para obtener los datos de la noticia y redirigir al detalle
     function irADetalle(idNoticia) {
+      const idEmpresa = obtenerParametroDeURL('id');
       window.location.href = `detalle.html?idEmpresa=${idEmpresa}&idNoticia=${idNoticia}`;
     }
   </script>
@@ -234,7 +241,8 @@
       // Función para redirigir a la página de detalle con el ID de la noticia
       function irADetalle(idNoticia) {
         // Obtener el ID de la empresa de la URL actual
-        const idEmpresa = obtenerParametroDeURL('idEmpresa');
+        const idEmpresa = obtenerParametroDeURL('id');
+        const idNoticia = obtenerParametroDeURL('id');
   
         // Redirigir a la página de detalle con los parámetros necesarios
         window.location.href = `detalle.html?idEmpresa=${idEmpresa}&idNoticia=${idNoticia}`;
@@ -246,6 +254,7 @@
 <!-- Incluye el JavaScript de Owl Carousel -->
 <script src="//cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 <!-- Configura el Owl Carousel -->
+<!-- Configurar el carrusel una vez que se han agregado todos los elementos -->
 <script>
   // Hacer la solicitud de las noticias específicas de la empresa
   fetch(`/empresas/${idEmpresa}/noticias`)
@@ -287,6 +296,7 @@
     });
   }
 </script>
+
 
 
 </body>
