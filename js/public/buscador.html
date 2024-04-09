@@ -44,11 +44,10 @@
                 </h1>
                 <a class="search-form_toggle" href="#"></a>
             </div>
-
             <div class="help-box text-right">
-                <p>Teléfono</p>
-                <a id="telefono" href="callto:#">800-2345-6789</a>
-                <small><span>Horario:</span>  6am-4pm PST M-Th; &nbsp;6am-3pm PST Fri</small>
+                <p id="telefono">Telefono</p>
+                <a href="callto:#" id="telefonoValue"></a>
+                <small>Horario: <span id="horarioAtencion" class="horario" style="color: #666; font-size: 14px; font-family: Arial, sans-serif;"></span></small>
             </div>
         </div>
 
@@ -223,7 +222,29 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/tm-scripts.js"></script>
 <!-- </script> -->
+<script>
+    function obtenerParametroDeURL(parametro) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(parametro);
+    }
+  
+    const idEmpresa = obtenerParametroDeURL('id');
+  
+    fetch(`/empresas/${idEmpresa}`)
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('denominacion').textContent = data.denominacion || 'Empresa no encontrada';
+        document.getElementById('telefonoValue').textContent = data.telefono || 'Teléfono no disponible';
+        document.getElementById('horarioAtencion').textContent = data.horarioAtencion || 'Horario no disponible';
+      })
+      .catch(error => console.error('Error al obtener la información de la empresa:', error));
 
+    // Función para obtener los datos de la noticia y redirigir al detalle
+    function irADetalle(idNoticia) {
+      const idEmpresa = obtenerParametroDeURL('id');
+      window.location.href = `detalle.html?idEmpresa=${idEmpresa}&idNoticia=${idNoticia}`;
+    }
+  </script>
 <!-- coded by vitlex -->
 </body>
 </html>
