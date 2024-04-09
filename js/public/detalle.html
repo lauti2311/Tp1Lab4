@@ -54,8 +54,8 @@
           <div class="">
             <ul class="nav navbar-nav sf-menu sf-js-enabled sf-arrows" data-type="navbar">
               <li style="list-style: none;" class="active">
-                <a href="home.html">INICIO</a>
-              </li>
+                <a href="#" onclick="irAHome()">INICIO</a>
+            </li>
               <li style="list-style: none;">
                 <a href="./">LISTA EMPRESAS</a>
               </li>
@@ -199,5 +199,44 @@ Promise.all([
 .catch(error => console.error('Error al obtener la información:', error));
 </script>
 
+<script>
+  function obtenerParametroDeURL(parametro) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(parametro);
+  }
+
+  function cargarInformacionEmpresa() {
+    const idEmpresa = obtenerParametroDeURL('idEmpresa');
+    if (!idEmpresa) {
+      console.error('ID de empresa no encontrado en la URL');
+      // Manejar la situación de alguna manera adecuada, por ejemplo, redirigiendo a una página de error.
+      return;
+    }
+
+    fetch(`/empresas/${idEmpresa}`)
+      .then(response => response.json())
+      .then(data => {
+        // Mostrar la información de la empresa
+        document.getElementById('denominacionEmpresa').textContent = data.denominacion || 'Empresa no encontrada';
+        document.getElementById('telefono').textContent = data.telefono || 'Teléfono no disponible';
+        document.getElementById('horarioAtencion').textContent = data.horarioAtencion || 'Horario no disponible';
+        document.getElementById('denominacionEmpresaFooter').textContent = data.denominacion || 'Empresa no encontrada';
+      })
+      .catch(error => console.error('Error al obtener la información de la empresa:', error));
+  }
+
+  cargarInformacionEmpresa();
+
+  function irAHome() {
+    // Obtener el ID de la empresa de la URL actual
+    const idEmpresa = obtenerParametroDeURL('idEmpresa');
+    
+    // Construir la URL de redirección a home.html con el ID de la empresa como parámetro
+    const url = `home.html?id=${idEmpresa}`;
+    
+    // Redirigir a la página home.html con el ID de la empresa en la URL
+    window.location.href = url;
+  }
+</script>
 </body>
 </html>
