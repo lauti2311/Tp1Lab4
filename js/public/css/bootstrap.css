@@ -6383,14 +6383,14 @@ a.badge:focus {
   padding: 29px 49px 39px 45px;
   position: absolute;
   left: 21.4%;
-  top: 49.5%;
+  top: 30%;
   min-width: 300px;
 }
 .jumbotron em {
   text-transform: uppercase;
   font-style: normal;
-  font-size: 94px;
-  font-weight: 900;
+  font-size: 50px;
+  font-weight: 500;
   color: #21c2f8;
   line-height: 110px;
   letter-spacing: -2px;

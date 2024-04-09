@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="css/camera.css">
   <link rel="stylesheet" href="css/search.css">
   <link rel="stylesheet" href="css/google-map.css">
+  <link rel="stylesheet" href="css/owl-carousel.css">
 
 
   <!--JS-->
@@ -58,7 +59,7 @@
 
         <div class="help-box text-right">
           <p>Teléfono</p>
-          <p id="telefono" href="callto:#"></p>
+          <a id="telefono" href="callto:#"></a>
           <small style="font-size: 14px; color: #666;">
             <span class="horario" style="font-weight: bold;">Horario:</span>
             <small><span id="horarioAtencion" class="horario" style="color: #666; font-size: 14px; font-family: Arial, sans-serif;"></span></small>
@@ -80,14 +81,37 @@
               </ul>
             </div>
           </nav>
-          <form class="search-form" action="buscador.html" method="GET" accept-charset="utf-8">
+          <form id="searchForm" class="search-form" method="GET" accept-charset="utf-8">
             <label class="search-form_label">
-              <input class="search-form_input" type="text" name="buscar" autocomplete="off"
-                placeholder="Ingrese Texto" />
-              <span class="search-form_liveout"></span>
+                <input id="searchInput" class="search-form_input" type="text" name="buscar" autocomplete="off" placeholder="Ingrese Texto" />
+                <span class="search-form_liveout"></span>
             </label>
-            <button class="search-form_submit fa-search" type="submit"></button>
-          </form>
+            <button id="searchButton" class="search-form_submit fa-search" type="button"></button>
+        </form>
+        
+        <script>
+            document.getElementById('searchButton').addEventListener('click', function(event) {
+                // Obtener el valor del campo de búsqueda
+                var busqueda = document.getElementById('searchInput').value.trim();
+        
+                // Obtener el ID de la empresa de la URL actual
+                var urlParams = new URLSearchParams(window.location.search);
+                var idEmpresa = urlParams.get('id');
+        
+                // Construir la URL de redirección
+                var url = 'buscador.html?id=' + idEmpresa;
+        
+                // Verificar si el campo de búsqueda no está vacío
+                if (busqueda !== '') {
+                    // Agregar el término de búsqueda a la URL
+                    url += '&buscar=' + encodeURIComponent(busqueda);
+                }
+        
+                // Redirigir manualmente a la URL compuesta
+                window.location.href = url;
+            });
+          </script>
+          
         </div>
       </div>
     </header>
@@ -133,8 +157,8 @@
     <div id="map" style="height: 400px;"></div>
 
     <script>
-      function iniciarMap() {
-        var coord = { lat: -32.88154997304907, lng: -68.83492456656404 };
+      function iniciarMap(latitud, longitud) {
+        var coord = { lat: latitud, lng: longitud };
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 15,
           center: coord
@@ -146,13 +170,13 @@
       }
     </script>
     <script
-      src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=iniciarMap"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDMd2Vz-sYpeCAzMegLejYS9JVi-_loR4&callback=iniciarMap"
       async defer></script>
 
     <section class="well1">
       <div class="container">
         <p class="rights">
-          Denominación Empresa &#169; <span id="copyright-year"></span>
+          <span id="denominacionEmpresaFooter"></span> &#169; <span id="copyright-year"></span>
           <a href="index-5.html">Privacy Policy</a>
           <!-- {%FOOTER_LINK} -->
         </p>
@@ -164,8 +188,14 @@
 
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="js/jquery.js"></script>
+  <script src="js/jquery-migrate-1.2.1.min.js"></script>
+  <script src="js/rd-smoothscroll.min.js"></script>
+  <script src="js/device.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
   <script src="js/tm-scripts.js"></script>
+  
+  
   <!-- </script> -->
 
   <script>
@@ -180,84 +210,113 @@
       .then(response => response.json())
       .then(data => {
         document.getElementById('denominacion').textContent = data.denominacion || 'Empresa no encontrada';
+        document.getElementById('denominacionEmpresaFooter').textContent = data.denominacion || 'Empresa no encontrada'; // Modificación aquí
         document.getElementById('quienesSomos').textContent = data.quienesSomos || 'Descripción no disponible';
         document.getElementById('telefono').textContent = data.telefono || 'Teléfono no disponible';
         document.getElementById('horarioAtencion').textContent = data.horarioAtencion || 'Horario no disponible';
-        document.getElementById('latitud').textContent = data.Latitud;
-        document.getElementById('longitud').textContent = data.Longitud;
-  
-        // Obtener la latitud y longitud de la empresa
-        const latitud = parseFloat(data.Latitud);
-        const longitud = parseFloat(data.Longitud);
-        const coord = { lat: latitud, lng: longitud };
-  
-        // Inicializar el mapa
-        const map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 15,
-          center: coord
-        });
-  
-        // Colocar un marcador en la ubicación de la empresa
-        const marker = new google.maps.Marker({
-          position: coord,
-          map: map,
-          title: data.Denominacion || 'Ubicación de la empresa'
-        });
+
+        // Llama a la función iniciarMap con las coordenadas de la empresa
+        iniciarMap(parseFloat(data.latitud), parseFloat(data.longitud));
       })
       .catch(error => console.error('Error al obtener la información de la empresa:', error));
 
     // Función para obtener los datos de la noticia y redirigir al detalle
     function irADetalle(idNoticia) {
+      const idEmpresa = obtenerParametroDeURL('id');
       window.location.href = `detalle.html?idEmpresa=${idEmpresa}&idNoticia=${idNoticia}`;
     }
   </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Seleccionar todos los elementos con la clase 'titulo-noticia'
+        const titulosNoticia = document.querySelectorAll('.titulo-noticia');
+  
+        // Agregar un controlador de eventos click a cada título de noticia
+        titulosNoticia.forEach(titulo => {
+          titulo.addEventListener('click', function() {
+            // Obtener el ID de la noticia del atributo de datos 'data-id'
+            const idNoticia = this.dataset.id;
+  
+            // Redirigir a la página de detalle con el ID de la noticia
+            irADetalle(idNoticia);
+          });
+        });
+      });
+  
+      // Función para redirigir a la página de detalle con el ID de la noticia
+      // function irADetalle(idNoticia) {
+      //   // Obtener el ID de la empresa de la URL actual
+      //   const idEmpresa = obtenerParametroDeURL('id');
+      //   const idNoticia = obtenerParametroDeURL('id');
+  
+      //   // Redirigir a la página de detalle con los parámetros necesarios
+      //   window.location.href = `detalle.html?idEmpresa=${idEmpresa}&idNoticia=${idNoticia}`;
+      // }
+    </script>
 
 <!-- Incluye jQuery (necesario para Owl Carousel) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <!-- Incluye el JavaScript de Owl Carousel -->
 <script src="//cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 <!-- Configura el Owl Carousel -->
+<!-- Configurar el carrusel una vez que se han agregado todos los elementos -->
 <script>
   // Hacer la solicitud de las noticias específicas de la empresa
   fetch(`/empresas/${idEmpresa}/noticias`)
-    .then(response => response.json())
-    .then(noticias => {
-      const carouselContainer = document.getElementById('carouselNoticias');
-      // Iterar sobre cada noticia y crear un elemento para agregar al carrusel
-      noticias.forEach(noticia => {
-        const item = document.createElement('div');
-        item.classList.add('item');
-        item.innerHTML = `
-          <img src="${noticia.ImagenNoticia}" alt="${noticia.TituloNoticia}" style="max-width: 2050px; max-height: 670px; width: auto; height: auto;">
-          <div class="title">
-            <div class="jumbotron jumbotron1">
-              <em><a href="#" onclick="irADetalle(${noticia.id})">${noticia.TituloNoticia}</a></em>
-              <div class="wrap">
-                <p>${noticia.ResumenNoticia}</p>
-                <a href="#" onclick="irADetalle(${noticia.id})">Leer más</a>
-              </div>
-            </div>
-          </div>
-        `;
-        carouselContainer.appendChild(item);
-      });
-      // Configurar el carrusel una vez que se han agregado todos los elementos
-      configurarCarrusel();
-    })
-    .catch(error => console.error('Error al obtener noticias:', error));
+  .then(response => response.json())
+  .then(noticias => {
+    noticias.sort((a, b) => new Date(b.FechaPublicacion) - new Date(a.FechaPublicacion));
+      
+    // Tomar solo las últimas 5 noticias, si hay más de 5
+    const ultimasNoticias = noticias.slice(0, 6);
 
-  // Función para configurar el carrusel una vez que se han agregado todos los elementos
-  function configurarCarrusel() {
-    $(".owl-carousel").owlCarousel({
-      items: 1,
-      loop: true,
-      autoplay: true,
-      autoplayTimeout: 5000, // Cambia cada 5 segundos
-      autoplayHoverPause: true // Pausa al pasar el mouse sobre el carrusel
-      // Otros ajustes de Owl Carousel si los necesitas
+    // Actualizar el carrusel con las últimas noticias
+    ultimasNoticias.forEach(noticia => {
+      actualizarCarrusel(noticia);
     });
+
+    // Configurar el carrusel una vez que se han agregado todos los elementos
+    configurarCarrusel();
+  })
+  .catch(error => console.error('Error al obtener noticias:', error));
+
+function actualizarCarrusel(noticia) {
+  const carouselContainer = document.getElementById('carouselNoticias');
+  const item = document.createElement('div');
+  item.classList.add('item');
+  item.innerHTML = `
+    <img src="${noticia.ImagenNoticia}" alt="${noticia.TituloNoticia}">
+    <div class="title">
+      <div class="jumbotron jumbotron1">
+        <em><a href="#" onclick="irADetalle(${noticia.id})">${noticia.TituloNoticia}</a></em>
+        <div class="wrap">
+          <p>${noticia.ResumenNoticia}</p>
+          <a href="#" onclick="irADetalle(${noticia.id})">Leer más</a>
+        </div>
+      </div>
+    </div>
+  `;
+  carouselContainer.appendChild(item);
+}
+
+function configurarCarrusel() {
+  $(".owl-carousel").owlCarousel({
+    items: 1,
+    loop: true,
+    autoplay: true,
+    autoplayTimeout: 5000, // Cambia cada 5 segundos
+    autoplayHoverPause: true // Pausa al pasar el mouse sobre el carrusel
+    // Otros ajustes de Owl Carousel si los necesitas
+  });
+
+  // Eliminar la última noticia del carrusel
+  const owlCarousel = $(".owl-carousel").data('owl.carousel');
+  if (owlCarousel) {
+    owlCarousel.remove(owlCarousel.items().length - 1);
   }
+}
 </script>
+
 
 
 </body>
