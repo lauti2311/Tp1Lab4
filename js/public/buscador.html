@@ -214,7 +214,7 @@
 	<section class="well">
 		<div class="container">
 			<p class="rights">
-				Denominación Empresa  &#169; <span id="copyright-year"></span>
+				<span id="denominacionEmpresaFooter"></span> &#169; <span id="copyright-year"></span>
 				<a href="index-5.html">Privacy Policy</a>
 				<!-- {%FOOTER_LINK} -->
 			</p>
@@ -241,6 +241,7 @@
         document.getElementById('denominacion').textContent = data.denominacion || 'Empresa no encontrada';
         document.getElementById('telefonoValue').textContent = data.telefono || 'Teléfono no disponible';
         document.getElementById('horarioAtencion').textContent = data.horarioAtencion || 'Horario no disponible';
+        document.getElementById('denominacionEmpresaFooter').textContent = data.denominacion || 'Empresa no encontrada'; // Modificación aquí
       })
       .catch(error => console.error('Error al obtener la información de la empresa:', error));
 
