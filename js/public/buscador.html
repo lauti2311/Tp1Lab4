@@ -57,7 +57,7 @@
                     <div class="">
                         <ul class="nav navbar-nav sf-menu sf-js-enabled sf-arrows" data-type="navbar">
                             <li style="list-style: none;" class="active">
-                                <a href="home.html?id=">INICIO</a>
+                                <a href="#" onclick="irAHome()">INICIO</a>
                             </li>
                             <li style="list-style: none;">
                                 <a href="./">LISTA EMPRESAS</a>
@@ -116,7 +116,7 @@
             </div>
         </section>
     </main>
-
+<!-- 
 <script>
     // Función para filtrar las noticias según el término de búsqueda
     function filtrarNoticias(termino) {
@@ -183,6 +183,17 @@
                 contenidoHTMLCell.innerHTML = noticia.ContenidoHTML; // Actualizado al campo correcto
                 row.appendChild(contenidoHTMLCell);
 
+                // Columna para la imagen de la noticia
+                const imagenCell = document.createElement('p');
+                const imagen = document.createElement('img');
+                imagen.src = noticia.ImagenNoticia;
+                imagen.alt = noticia.TituloNoticia; // Asigna el título como texto alternativo de la imagen
+                imagen.style.width = '200px';
+                imagenCell.appendChild(imagen);
+                row.appendChild(imagenCell);
+                noticias.forEach(noticia => {
+                const row = document.createElement('tr');
+
                 // Columna para el enlace de la página de la noticia
                 const verNoticiaCell = document.createElement('td');
                 const link = document.createElement('a');
@@ -208,7 +219,7 @@
         const idEmpresa = obtenerIdDeUrl();
         window.location.href = `detalle.html?idEmpresa=${idEmpresa}&idNoticia=${idNoticia}`;
     }
-</script>
+</script> -->
 
  <!--========================================================
                             FOOTER
@@ -229,31 +240,144 @@
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="js/bootstrap.min.js"></script>
 <script src="js/tm-scripts.js"></script>
+<script src="js/rd-smoothscroll.min.js"></script>
+<script src='js/device.min.js'></script>
 <!-- </script> -->
 <script>
-    function obtenerParametroDeURL(parametro) {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(parametro);
+    // Función para filtrar las noticias según el término de búsqueda
+    function filtrarNoticias(termino) {
+        const noticias = document.querySelectorAll('#tablaNoticias tbody tr');
+        noticias.forEach(noticia => {
+            const titulo = noticia.querySelector('td:first-child').textContent.toLowerCase();
+            if (titulo.includes(termino.toLowerCase())) {
+                noticia.style.display = 'table-row';
+            } else {
+                noticia.style.display = 'none';
+            }
+        });
     }
-  
-    const idEmpresa = obtenerParametroDeURL('id');
-  
-    fetch(`/empresas/${idEmpresa}`)
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('denominacion').textContent = data.denominacion || 'Empresa no encontrada';
-        document.getElementById('telefonoValue').textContent = data.telefono || 'Teléfono no disponible';
-        document.getElementById('horarioAtencion').textContent = data.horarioAtencion || 'Horario no disponible';
-        document.getElementById('denominacionEmpresaFooter').textContent = data.denominacion || 'Empresa no encontrada'; // Modificación aquí
-      })
-      .catch(error => console.error('Error al obtener la información de la empresa:', error));
+
+    // Función para manejar la búsqueda cuando se envía el formulario
+    document.querySelector('.search-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Evitar el envío del formulario
+
+        const terminoBusqueda = this.querySelector('.search-form_input').value.trim();
+        filtrarNoticias(terminoBusqueda);
+        establecerTerminoDeBusquedaEnElemento('searchTerm'); // Agregado
+    });
+
+    // Función para manejar la búsqueda cuando se cambia el contenido del campo de búsqueda
+    document.querySelector('.search-form_input').addEventListener('input', function() {
+        const terminoBusqueda = this.value.trim();
+        filtrarNoticias(terminoBusqueda);
+        establecerTerminoDeBusquedaEnElemento('searchTerm'); // Agregado
+    });
+
+    // Función para obtener el término de búsqueda de la URL
+    function obtenerTerminoDeBusqueda() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('buscar');
+    }
+
+    // Función para establecer el término de búsqueda como el texto del elemento especificado
+    function establecerTerminoDeBusquedaEnElemento(elementId) {
+        const searchTerm = obtenerTerminoDeBusqueda();
+        document.getElementById(elementId).textContent = searchTerm || 'Término de búsqueda no especificado';
+    }
+
+    // Llamar a la función para establecer el término de búsqueda en el elemento correspondiente
+    establecerTerminoDeBusquedaEnElemento('searchTerm');
+
+    // Realizar una solicitud al servidor para obtener las noticias de la empresa específica
+    fetch(`/empresas/${empresaId}/noticias`)
+        .then(response => response.json())
+        .then(noticias => {
+            const tablaNoticias = document.getElementById('tablaNoticias');
+            noticias.forEach(noticia => {
+                const row = document.createElement('tr');
+
+                                // Columna para la imagen de la noticia
+                                const imagenCell = document.createElement('p');
+                const imagen = document.createElement('img');
+                imagen.src = noticia.ImagenNoticia;
+                imagen.alt = noticia.TituloNoticia; // Asigna el título como texto alternativo de la imagen
+                imagen.style.width = '200px';
+                imagenCell.appendChild(imagen);
+                row.appendChild(imagenCell);
+
+                // Columna para el título de la noticia
+                const tituloCell = document.createElement('td');
+                tituloCell.textContent = noticia.TituloNoticia; // Actualizado al campo correcto
+                row.appendChild(tituloCell);
+
+                const resumenCell = document.createElement('td');
+                resumenCell.textContent = noticia.ResumenNoticia; // Actualizado al campo correcto
+                row.appendChild(resumenCell);
+                
+                // Columna para el título de la noticia
+                const fechaPublicacionCell = document.createElement('td');
+                fechaPublicacionCell.textContent = noticia.FechaPublicacion; // Actualizado al campo correcto
+                row.appendChild(fechaPublicacionCell);
+
+
+                // Columna para el enlace de la página de la noticia
+                const verNoticiaCell = document.createElement('td');
+                const link = document.createElement('a');
+                link.href = `detalle.html?idEmpresa=${empresaId}&idNoticia=${noticia.id}`;
+                link.textContent = 'Leer más';
+                link.onclick = () => irADetalle(noticia.id); // Asigna la función para redirigir al detalle
+                verNoticiaCell.appendChild(link);
+                row.appendChild(verNoticiaCell);
+
+                // Agregar la fila a la tabla
+                tablaNoticias.querySelector('tbody').appendChild(row); // Cambiado aquí
+            });
+            // Filtrar las noticias una vez que se hayan cargado todas
+            const searchTerm = obtenerTerminoDeBusqueda();
+            if (searchTerm) {
+                filtrarNoticias(searchTerm);
+            }
+            })
+        .catch(error => console.error('Error al obtener las noticias:', error));
 
     // Función para obtener los datos de la noticia y redirigir al detalle
     function irADetalle(idNoticia) {
-      const idEmpresa = obtenerParametroDeURL('id');
-      window.location.href = `detalle.html?idEmpresa=${idEmpresa}&idNoticia=${idNoticia}`;
+        const idEmpresa = obtenerIdDeUrl();
+        window.location.href = `detalle.html?idEmpresa=${idEmpresa}&idNoticia=${idNoticia}`;
     }
 </script>
+
+<!-- Script para obtener datos de la empresa desde el servidor -->
+<script>
+    function obtenerParametroDeURL(parametro) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(parametro);
+    }
+
+    const idEmpresa = obtenerParametroDeURL('id');
+
+    fetch(`/empresas/${idEmpresa}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('denominacion').textContent = data.denominacion || 'Empresa no encontrada';
+            document.getElementById('telefonoValue').textContent = data.telefono || 'Teléfono no disponible';
+            document.getElementById('horarioAtencion').textContent = data.horarioAtencion || 'Horario no disponible';
+            document.getElementById('denominacionEmpresaFooter').textContent = data.denominacion || 'Empresa no encontrada'; // Modificación aquí
+        })
+        .catch(error => console.error('Error al obtener la información de la empresa:', error));
+</script>
+<script>
+    function irAHome() {
+        // Obtener el ID de la empresa de la URL actual
+        const idEmpresa = obtenerParametroDeURL('id');
+        
+        // Construir la URL de redirección a home.html con el ID de la empresa como parámetro
+        const url = `home.html?id=${idEmpresa}`;
+        
+        // Redirigir a la página home.html con el ID de la empresa en la URL
+        window.location.href = url;
+    }
+  </script>
 <!-- coded by vitlex -->
 </body>
 </html>

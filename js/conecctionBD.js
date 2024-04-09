@@ -195,7 +195,7 @@ app.get('/empresas/:id/noticias', (req, res) => {
   const idEmpresa = req.params.id;
 
   // Consultar la base de datos para obtener las noticias de la empresa por su ID en orden descendente
-  const sql = 'SELECT TituloNoticia, ResumenNoticia, ImagenNoticia, id, ContenidoHTML FROM Noticia WHERE idEmpresa = ? AND Publicada = 1 ORDER BY FechaPublicacion DESC';
+  const sql = 'SELECT TituloNoticia, ResumenNoticia, ImagenNoticia, id, ContenidoHTML, FechaPublicacion FROM Noticia WHERE idEmpresa = ? AND Publicada = 1 ORDER BY FechaPublicacion DESC';
   connection.query(sql, [idEmpresa], (err, results) => {
     if (err) {
       console.error('Error al obtener noticias de la empresa: ' + err.stack);
@@ -204,6 +204,7 @@ app.get('/empresas/:id/noticias', (req, res) => {
     res.json(results);
   });
 });
+
 app.get('/empresas/:idEmpresa/noticias/:idNoticia', (req, res) => {
   const idEmpresa = req.params.idEmpresa;
   const idNoticia = req.params.idNoticia;
