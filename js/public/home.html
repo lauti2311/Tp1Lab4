@@ -275,7 +275,7 @@
     noticias.sort((a, b) => new Date(b.FechaPublicacion) - new Date(a.FechaPublicacion));
       
     // Tomar solo las últimas 5 noticias, si hay más de 5
-    const ultimasNoticias = noticias.slice(0, 6);
+    const ultimasNoticias = noticias.slice(0, 5);
 
     // Actualizar el carrusel con las últimas noticias
     ultimasNoticias.forEach(noticia => {
@@ -287,24 +287,24 @@
   })
   .catch(error => console.error('Error al obtener noticias:', error));
 
-function actualizarCarrusel(noticia) {
-  const carouselContainer = document.getElementById('carouselNoticias');
-  const item = document.createElement('div');
-  item.classList.add('item');
-  item.innerHTML = `
-    <img src="${noticia.ImagenNoticia}" alt="${noticia.TituloNoticia}">
-    <div class="title">
-      <div class="jumbotron jumbotron1">
-        <em><a href="#" onclick="irADetalle(${noticia.id})">${noticia.TituloNoticia}</a></em>
-        <div class="wrap">
-          <p>${noticia.ResumenNoticia}</p>
-          <a href="#" onclick="irADetalle(${noticia.id})">Leer más</a>
+  function actualizarCarrusel(noticia) {
+    const carouselContainer = document.getElementById('carouselNoticias');
+    const item = document.createElement('div');
+    item.classList.add('item');
+    item.innerHTML = `
+        <img src="${noticia.ImagenNoticia}" alt="${noticia.TituloNoticia}">
+        <div class="title">
+          <div class="jumbotron jumbotron1">
+            <em><a href="#" onclick="irADetalle(${noticia.id})">${noticia.TituloNoticia}</a></em>
+            <div class="wrap">
+              <p>${noticia.ResumenNoticia}</p>
+              <a href="#" onclick="irADetalle(${noticia.id})">Leer más</a>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  `;
-  carouselContainer.appendChild(item);
-}
+      `;
+      carouselContainer.appendChild(item);
+  }
 
 function configurarCarrusel() {
   $(".owl-carousel").owlCarousel({
@@ -317,9 +317,13 @@ function configurarCarrusel() {
   });
 
   // Eliminar la última noticia del carrusel
-  const owlCarousel = $(".owl-carousel").data('owl.carousel');
   if (owlCarousel) {
-    owlCarousel.remove(owlCarousel.items().length - 1);
+    const numItems = owlCarousel.items().length - 1;
+    if (numItems > 5) {
+      for (let i = 0; i < numItems - 5; i++) {
+        owlCarousel.remove(0); // Eliminar las noticias más antiguas
+      }
+    }
   }
 }
 </script>
