@@ -175,7 +175,9 @@
                 const tituloCell = document.createElement('td');
                 tituloCell.textContent = noticia.TituloNoticia; // Actualizado al campo correcto
                 row.appendChild(tituloCell);
-
+                const resumenCell = document.createElement('td');
+                resumenCell.textContent = noticia.ResumenNoticia; // Actualizado al campo correcto
+                row.appendChild(resumenCell);
                 // Columna para el contenido HTML de la noticia
                 const contenidoHTMLCell = document.createElement('td');
                 contenidoHTMLCell.innerHTML = noticia.ContenidoHTML; // Actualizado al campo correcto
