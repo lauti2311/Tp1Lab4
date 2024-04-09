@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,7 +20,6 @@
     <script src="js/jquery-migrate-1.2.1.min.js"></script>
     <script src="js/rd-smoothscroll.min.js"></script>
 
-
     <!--[if lt IE 9]>
     <div style=' clear: both; text-align:center; position: relative;'>
         <a href="http://windows.microsoft.com/en-US/internet-explorer/..">
@@ -31,204 +30,230 @@
     <script src="js/html5shiv.js"></script>
     <![endif]-->
     <script src='js/device.min.js'></script>
-  </head>
-  <body>
-  <div class="page">
-  <!--========================================================
+</head>
+<body>
+<div class="page">
+    <!--========================================================
                             HEADER
   =========================================================-->
-    <header>  
-      <div class="container top-sect">
-        <div class="navbar-header">
-          <h1 class="navbar-brand">
-            <a data-type='rd-navbar-brand'  href="./"><small>Denominación <br>Empresa</small></a>
-          </h1>
-          <a class="search-form_toggle" href="#"></a>
+    <header>
+        <div class="container top-sect">
+            <div class="navbar-header">
+                <h1 class="navbar-brand">
+                    <a data-type='rd-navbar-brand' href="./"><small id="denominacion">denominacionEmpresa</small></a>
+                </h1>
+                <a class="search-form_toggle" href="#"></a>
+            </div>
+            <div class="help-box text-right">
+                <p id="telefono">Telefono</p>
+                <a href="callto:#" id="telefonoValue"></a>
+                <small>Horario: <span id="horarioAtencion" class="horario" style="color: #666; font-size: 14px; font-family: Arial, sans-serif;"></span></small>
+            </div>
         </div>
 
-        <div class="help-box text-right">
-          <p>Telefono</p>
-          <a href="callto:#">800-2345-6789</a>
-          <small><span>Horario:</span>  6am-4pm PST M-Th; &nbsp;6am-3pm PST Fri</small>
+        <div id="stuck_container" class="stuck_container">
+            <div class="container">
+                <nav class="navbar navbar-default navbar-static-top pull-left">
+                    <div class="">
+                        <ul class="nav navbar-nav sf-menu sf-js-enabled sf-arrows" data-type="navbar">
+                            <li style="list-style: none;" class="active">
+                                <a href="home.html?id=">INICIO</a>
+                            </li>
+                            <li style="list-style: none;">
+                                <a href="./">LISTA EMPRESAS</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <form class="search-form" method="GET" accept-charset="utf-8">
+                    <label class="search-form_label">
+                        <input class="search-form_input" type="text" name="buscar" autocomplete="off"
+                               placeholder="Ingrese Texto"/>
+                        <span class="search-form_liveout"></span>
+                    </label>
+                    <button class="search-form_submit fa-search" type="submit"></button>
+                </form>
+				<script>
+					// Función para obtener el valor del parámetro 'id' de la URL
+					function obtenerIdDeUrl() {
+						const urlParams = new URLSearchParams(window.location.search);
+						return urlParams.get('id');
+					}
+				
+					// Obtener el 'id' de la URL
+					empresaId = obtenerIdDeUrl();
+				
+					// Si se encontró el 'id' en la URL, establecerlo como el valor del campo oculto en el formulario
+					if (empresaId) {
+						const inputId = document.createElement('input');
+						inputId.type = 'hidden';
+						inputId.name = 'id';
+						inputId.value = empresaId;
+				
+						const form = document.querySelector('.search-form');
+						form.appendChild(inputId);
+					}
+				</script>
+            </div>
         </div>
-      </div>
-     
-	  <div id="stuck_container" class="stuck_container">
-        <div class="container">   
-			<nav class="navbar navbar-default navbar-static-top pull-left">            
-				<div class="">  
-				  <ul class="nav navbar-nav sf-menu sf-js-enabled sf-arrows" data-type="navbar">
-					<li style="list-style: none;" class="active">
-					  <a href="home.html">INICIO</a>
-					</li>
-					<li style="list-style: none;">
-					  <a href="./">LISTA EMPRESAS</a>
-					</li>
-				  </ul>                           
-				</div>
-			</nav>
-			<form class="search-form" action="buscador.html" method="GET" accept-charset="utf-8">
-			  <label class="search-form_label">
-				<input class="search-form_input" type="text" name="buscar" autocomplete="off" placeholder="Ingrese Texto"/>
-				<span class="search-form_liveout"></span>
-			  </label>
-			  <button class="search-form_submit fa-search" type="submit"></button>
-			</form>
-				 
-        </div>
-
-      </div>  
-
     </header>
 
-  <!--========================================================
+    <!--========================================================
                             CONTENT
   =========================================================-->
 
-    <main>        
-
-      <section class="well well4">
-		
-        <div class="container">
-			
-          <h2>
-            Texto Buscado
-          </h2>
-          <div class="row offs2">
-            
-            <table width="90%" align="center">
-				<tbody>
-					<tr>
-						<td>
-							<a href="detalle.html">
-								<img width="250px" class="imgNoticia" src="http://localhost:82/template_html/images/page-1_slide1.jpg?1583775512626" alt="">
-							</a>
-						</td>
-						<td width="25"></td>
-						<td style="text-align:justify;" valign="top">
-							<a style="text-align:justify; font-size:20px" href="detalle.html" class="banner">
-								Titulo									</a>
-							<div class="verOcultar">
-								Resumen de la Noticia<a href="detalle.html" style="color:blue"> Leer Mas - 2020-02-14</a>											
-							</div>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<hr>
-			<table width="90%" align="center">
-				<tbody>
-					<tr>
-						<td>
-							<a href="detalle.html">
-								<img width="250px" class="imgNoticia" src="http://localhost:82/template_html/images/page-1_slide1.jpg?1583775512626" alt="">
-							</a>
-						</td>
-						<td width="25"></td>
-						<td style="text-align:justify;" valign="top">
-							<a style="text-align:justify; font-size:20px" href="detalle.html" class="banner">
-								Titulo									</a>
-							<div class="verOcultar">
-								Resumen de la Noticia<a href="detalle.html" style="color:blue"> Leer Mas - 2020-02-14</a>											
-							</div>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<hr>
-			<table width="90%" align="center">
-				<tbody>
-					<tr>
-						<td>
-							<a href="detalle.html">
-								<img width="250px" class="imgNoticia" src="http://localhost:82/template_html/images/page-1_slide1.jpg?1583775512626" alt="">
-							</a>
-						</td>
-						<td width="25"></td>
-						<td style="text-align:justify;" valign="top">
-							<a style="text-align:justify; font-size:20px" href="detalle.html" class="banner">
-								Titulo									</a>
-							<div class="verOcultar">
-								Resumen de la Noticia<a href="detalle.html" style="color:blue"> Leer Mas - 2020-02-14</a>											
-							</div>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<hr>
-			<table width="90%" align="center">
-				<tbody>
-					<tr>
-						<td>
-							<a href="detalle.html">
-								<img width="250px" class="imgNoticia" src="http://localhost:82/template_html/images/page-1_slide1.jpg?1583775512626" alt="">
-							</a>
-						</td>
-						<td width="25"></td>
-						<td style="text-align:justify;" valign="top">
-							<a style="text-align:justify; font-size:20px" href="detalle.html" class="banner">
-								Titulo									</a>
-							<div class="verOcultar">
-								Resumen de la Noticia<a href="detalle.html" style="color:blue"> Leer Mas - 2020-02-14</a>											
-							</div>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<hr>
-			<table width="90%" align="center">
-				<tbody>
-					<tr>
-						<td>
-							<a href="detalle.html">
-								<img width="250px" class="imgNoticia" src="http://localhost:82/template_html/images/page-1_slide1.jpg?1583775512626" alt="">
-							</a>
-						</td>
-						<td width="25"></td>
-						<td style="text-align:justify;" valign="top">
-							<a style="text-align:justify; font-size:20px" href="detalle.html" class="banner">
-								Titulo									</a>
-							<div class="verOcultar">
-								Resumen de la Noticia<a href="detalle.html" style="color:blue"> Leer Mas - 2020-02-14</a>											
-							</div>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<hr>
-			
-			
-          </div>
-        </div>
-      </section>   
-      
-
+    <main>
+        <section class="well well4">
+            <div class="container">
+                <h2 id="searchTerm"></h2>
+                <div class="row offs2">
+                    <table id="tablaNoticias" width="90%" align="center">
+                        <tbody>
+                            <!-- Aquí se agregarán las noticias dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <!--========================================================
+<script>
+    // Función para filtrar las noticias según el término de búsqueda
+    function filtrarNoticias(termino) {
+        const noticias = document.querySelectorAll('#tablaNoticias tbody tr');
+        noticias.forEach(noticia => {
+            const titulo = noticia.querySelector('td:first-child').textContent.toLowerCase();
+            if (titulo.includes(termino.toLowerCase())) {
+                noticia.style.display = 'table-row';
+            } else {
+                noticia.style.display = 'none';
+            }
+        });
+    }
+
+    // Función para manejar la búsqueda cuando se envía el formulario
+    document.querySelector('.search-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Evitar el envío del formulario
+
+        const terminoBusqueda = this.querySelector('.search-form_input').value.trim();
+        filtrarNoticias(terminoBusqueda);
+        establecerTerminoDeBusquedaEnElemento('searchTerm'); // Agregado
+    });
+
+    // Función para manejar la búsqueda cuando se cambia el contenido del campo de búsqueda
+    document.querySelector('.search-form_input').addEventListener('input', function() {
+        const terminoBusqueda = this.value.trim();
+        filtrarNoticias(terminoBusqueda);
+        establecerTerminoDeBusquedaEnElemento('searchTerm'); // Agregado
+    });
+
+    // Función para obtener el término de búsqueda de la URL
+    function obtenerTerminoDeBusqueda() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('buscar');
+    }
+
+    // Función para establecer el término de búsqueda como el texto del elemento especificado
+    function establecerTerminoDeBusquedaEnElemento(elementId) {
+        const searchTerm = obtenerTerminoDeBusqueda();
+        document.getElementById(elementId).textContent = searchTerm || 'Término de búsqueda no especificado';
+    }
+
+    // Llamar a la función para establecer el término de búsqueda en el elemento correspondiente
+    establecerTerminoDeBusquedaEnElemento('searchTerm');
+
+    // Realizar una solicitud al servidor para obtener las noticias de la empresa específica
+    const empresaId = obtenerIdDeUrl();
+    fetch(`/empresas/${empresaId}/noticias`)
+        .then(response => response.json())
+        .then(noticias => {
+            const tablaNoticias = document.getElementById('tablaNoticias');
+            noticias.forEach(noticia => {
+                const row = document.createElement('tr');
+
+                // Columna para el título de la noticia
+                const tituloCell = document.createElement('td');
+                tituloCell.textContent = noticia.TituloNoticia; // Actualizado al campo correcto
+                row.appendChild(tituloCell);
+                const resumenCell = document.createElement('td');
+                resumenCell.textContent = noticia.ResumenNoticia; // Actualizado al campo correcto
+                row.appendChild(resumenCell);
+                // Columna para el contenido HTML de la noticia
+                const contenidoHTMLCell = document.createElement('td');
+                contenidoHTMLCell.innerHTML = noticia.ContenidoHTML; // Actualizado al campo correcto
+                row.appendChild(contenidoHTMLCell);
+
+                // Columna para el enlace de la página de la noticia
+                const verNoticiaCell = document.createElement('td');
+                const link = document.createElement('a');
+                link.href = `detalle.html?idEmpresa=${empresaId}&idNoticia=${noticia.id}`;
+                link.textContent = 'Leer más';
+                link.onclick = () => irADetalle(noticia.id); // Asigna la función para redirigir al detalle
+                verNoticiaCell.appendChild(link);
+                row.appendChild(verNoticiaCell);
+
+                // Agregar la fila a la tabla
+                tablaNoticias.querySelector('tbody').appendChild(row); // Cambiado aquí
+            });
+            // Filtrar las noticias una vez que se hayan cargado todas
+            const searchTerm = obtenerTerminoDeBusqueda();
+            if (searchTerm) {
+                filtrarNoticias(searchTerm);
+            }
+        })
+        .catch(error => console.error('Error al obtener las noticias:', error));
+
+    // Función para obtener los datos de la noticia y redirigir al detalle
+    function irADetalle(idNoticia) {
+        const idEmpresa = obtenerIdDeUrl();
+        window.location.href = `detalle.html?idEmpresa=${idEmpresa}&idNoticia=${idNoticia}`;
+    }
+</script>
+
+ <!--========================================================
                             FOOTER
   =========================================================-->
   <footer>
-   <section class="well">
-      <div class="container"> 
-            <p class="rights">
-              Denominación Empresa  &#169; <span id="copyright-year"></span>
-              <a href="index-5.html">Privacy Policy</a>
-              <!-- {%FOOTER_LINK} -->
-            </p>        
-      </div> 
-    </section>    
-  </footer>
-  </div>
+	<section class="well">
+		<div class="container">
+			<p class="rights">
+				<span id="denominacionEmpresaFooter"></span> &#169; <span id="copyright-year"></span>
+				<a href="index-5.html">Privacy Policy</a>
+				<!-- {%FOOTER_LINK} -->
+			</p>
+		</div>
+	</section>
+</footer>
+</div>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+<script src="js/tm-scripts.js"></script>
+<!-- </script> -->
+<script>
+    function obtenerParametroDeURL(parametro) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(parametro);
+    }
+  
+    const idEmpresa = obtenerParametroDeURL('id');
+  
+    fetch(`/empresas/${idEmpresa}`)
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('denominacion').textContent = data.denominacion || 'Empresa no encontrada';
+        document.getElementById('telefonoValue').textContent = data.telefono || 'Teléfono no disponible';
+        document.getElementById('horarioAtencion').textContent = data.horarioAtencion || 'Horario no disponible';
+        document.getElementById('denominacionEmpresaFooter').textContent = data.denominacion || 'Empresa no encontrada'; // Modificación aquí
+      })
+      .catch(error => console.error('Error al obtener la información de la empresa:', error));
 
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <!-- Include all compiled plugins (below), or include individual files as needed -->         
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/tm-scripts.js"></script>    
-  <!-- </script> -->
-
+    // Función para obtener los datos de la noticia y redirigir al detalle
+    function irADetalle(idNoticia) {
+      const idEmpresa = obtenerParametroDeURL('id');
+      window.location.href = `detalle.html?idEmpresa=${idEmpresa}&idNoticia=${idNoticia}`;
+    }
+</script>
 <!-- coded by vitlex -->
-
-  </body>
+</body>
 </html>

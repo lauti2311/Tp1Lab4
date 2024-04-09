@@ -18,6 +18,7 @@
   <script src="js/jquery.js"></script>
   <script src="js/jquery-migrate-1.2.1.min.js"></script>
   <script src="js/rd-smoothscroll.min.js"></script>
+  <script src="js/tm-scripts.js"></script>
 
   <!--[if lt IE 9]>
   <div style=' clear: both; text-align:center; position: relative;'>
@@ -43,8 +44,8 @@
       </div>
       <div class="help-box text-right">
         <p>Telefono</p>
-        <a id="telefono" href="callto:#">800-2345-6789</a>
-        <small><span>Horario:</span>  6am-4pm PST M-Th; &nbsp;6am-3pm PST Fri</small>
+        <a id="telefono" href="callto:#"></a>
+        <small>Horario:<span id="horarioAtencion" class="horario" style="color: #666; font-size: 14px; font-family: Arial, sans-serif;"></span></small>
       </div>
     </div>
     <div id="stuck_container" class="stuck_container">
@@ -53,21 +54,54 @@
           <div class="">
             <ul class="nav navbar-nav sf-menu sf-js-enabled sf-arrows" data-type="navbar">
               <li style="list-style: none;" class="active">
-                <a href="home.html">INICIO</a>
-              </li>
+                <a href="#" onclick="irAHome()">INICIO</a>
+            </li>
               <li style="list-style: none;">
                 <a href="./">LISTA EMPRESAS</a>
               </li>
             </ul>
           </div>
         </nav>
-        <form class="search-form" action="buscador.html" method="GET" accept-charset="utf-8">
+        <form id="searchForm" class="search-form" method="GET" accept-charset="utf-8">
           <label class="search-form_label">
-            <input class="search-form_input" type="text" name="buscar" autocomplete="off" placeholder="Ingrese Texto"/>
-            <span class="search-form_liveout"></span>
+              <input id="searchInput" class="search-form_input" type="text" name="buscar" autocomplete="off" placeholder="Ingrese Texto" />
+              <span class="search-form_liveout"></span>
           </label>
-          <button class="search-form_submit fa-search" type="submit"></button>
-        </form>
+          <!-- Cambiado el tipo de botón de "button" a "submit" -->
+          <button id="searchButton" class="search-form_submit fa-search" type="submit"></button>
+      </form>
+      <script>
+        // Función para redireccionar al buscador con los parámetros adecuados
+        function redirectToSearch() {
+            // Obtener el valor del campo de búsqueda
+            var busqueda = document.getElementById('searchInput').value.trim();
+      
+            // Obtener el ID de la empresa de la URL actual
+            var urlParams = new URLSearchParams(window.location.search);
+            var idEmpresa = urlParams.get('idEmpresa');
+      
+            // Construir la URL de redirección
+            var url = 'buscador.html?id=' + idEmpresa;
+      
+            // Verificar si el campo de búsqueda no está vacío
+            if (busqueda !== '') {
+                // Agregar el término de búsqueda a la URL
+                url += '&buscar=' + encodeURIComponent(busqueda);
+            }
+      
+            // Redirigir manualmente a la URL compuesta
+            window.location.href = url;
+        }
+
+        // Agregar un controlador de eventos para el evento submit del formulario
+        document.getElementById('searchForm').addEventListener('submit', function(event) {
+            // Evitar el comportamiento predeterminado del formulario (enviar)
+            event.preventDefault();
+      
+            // Llamar a la función para redireccionar al buscador
+            redirectToSearch();
+        });
+      </script>
       </div>
     </div>
   </header>
@@ -102,7 +136,7 @@
     <section class="well">
       <div class="container">
         <p class="rights">
-          Denominación Empresa  &#169; <span id="copyright-year"></span>
+          <span id="denominacionEmpresaFooter"></span> &#169; <span id="copyright-year"></span>
           <a href="index-5.html">Privacy Policy</a>
           <!-- {%FOOTER_LINK} -->
         </p>
@@ -115,7 +149,9 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/tm-scripts.js"></script>
 
+
 <script>
+  
   function obtenerParametroDeURL(parametro) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(parametro);
@@ -124,17 +160,83 @@
   const idEmpresa = obtenerParametroDeURL('idEmpresa');
   const idNoticia = obtenerParametroDeURL('idNoticia');
 
-  fetch(`/empresas/${idEmpresa}/noticias/${idNoticia}`)
-    .then(response => response.json())
-    .then(noticia => {
-      document.getElementById('denominacionEmpresa').textContent = noticia.denominacion || 'Empresa no encontrada';
-      document.getElementById('tituloNoticia').textContent = noticia.titulo || 'Titulo no encontrado';
-      document.getElementById('resumenNoticia').textContent = noticia.resumen || 'Resumen no disponible';
-      document.getElementById('fechaPublicacion').textContent = noticia.fechaPublicacion || 'Fecha de publicación no disponible';
-      document.getElementById('imagenNoticia').style.backgroundImage = `url('${noticia.imagen}')`;
-      document.getElementById('contenidoHTML').innerHTML = noticia.contenidoHTML || 'Contenido no disponible';
-    })
-    .catch(error => console.error('Error al obtener la información de la noticia:', error));
+  if (!idEmpresa) {
+    console.error('ID de empresa no encontrado en la URL');
+    // Maneja la situación de alguna manera adecuada, por ejemplo, redirigiendo a una página de error.
+  }
+
+  if (!idNoticia) {
+    console.error('ID de noticia no encontrado en la URL');
+    // Maneja la situación de alguna manera adecuada, por ejemplo, redirigiendo a una página de error.
+  }
+
+  const urlEmpresa = `/empresas/${idEmpresa}`;
+const urlNoticia = `/empresas/${idEmpresa}/noticias/${idNoticia}`;
+
+Promise.all([
+  fetch(urlEmpresa),
+  fetch(urlNoticia)
+])
+.then(responses => Promise.all(responses.map(response => response.json())))
+.then(data => {
+  const empresaInfo = data[0];
+  const noticiaInfo = data[1];
+
+  // Mostrar la información de la empresa
+  document.getElementById('denominacionEmpresa').textContent = empresaInfo.denominacion || 'Empresa no encontrada';
+  document.getElementById('telefono').textContent = empresaInfo.telefono || 'Teléfono no disponible';
+  document.getElementById('horarioAtencion').textContent = empresaInfo.horarioAtencion || 'Horario no disponible';
+  document.getElementById('denominacionEmpresaFooter').textContent = empresaInfo.denominacion || 'Empresa no encontrada'; // Modificación aquí
+
+
+  // Mostrar la información de la noticia
+  document.getElementById('tituloNoticia').textContent = noticiaInfo.titulo || 'Titulo no encontrado';
+  document.getElementById('resumenNoticia').textContent = noticiaInfo.resumen || 'Resumen no disponible';
+  document.getElementById('fechaPublicacion').textContent = noticiaInfo.fechaPublicacion || 'Fecha de publicación no disponible';
+  document.getElementById('imagenNoticia').style.backgroundImage = `url('${noticiaInfo.imagen}')`;
+  document.getElementById('contenidoHTML').innerHTML = noticiaInfo.contenidoHTML || 'Contenido no disponible';
+})
+.catch(error => console.error('Error al obtener la información:', error));
+</script>
+
+<script>
+  function obtenerParametroDeURL(parametro) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(parametro);
+  }
+
+  function cargarInformacionEmpresa() {
+    const idEmpresa = obtenerParametroDeURL('idEmpresa');
+    if (!idEmpresa) {
+      console.error('ID de empresa no encontrado en la URL');
+      // Manejar la situación de alguna manera adecuada, por ejemplo, redirigiendo a una página de error.
+      return;
+    }
+
+    fetch(`/empresas/${idEmpresa}`)
+      .then(response => response.json())
+      .then(data => {
+        // Mostrar la información de la empresa
+        document.getElementById('denominacionEmpresa').textContent = data.denominacion || 'Empresa no encontrada';
+        document.getElementById('telefono').textContent = data.telefono || 'Teléfono no disponible';
+        document.getElementById('horarioAtencion').textContent = data.horarioAtencion || 'Horario no disponible';
+        document.getElementById('denominacionEmpresaFooter').textContent = data.denominacion || 'Empresa no encontrada';
+      })
+      .catch(error => console.error('Error al obtener la información de la empresa:', error));
+  }
+
+  cargarInformacionEmpresa();
+
+  function irAHome() {
+    // Obtener el ID de la empresa de la URL actual
+    const idEmpresa = obtenerParametroDeURL('idEmpresa');
+    
+    // Construir la URL de redirección a home.html con el ID de la empresa como parámetro
+    const url = `home.html?id=${idEmpresa}`;
+    
+    // Redirigir a la página home.html con el ID de la empresa en la URL
+    window.location.href = url;
+  }
 </script>
 </body>
 </html>
