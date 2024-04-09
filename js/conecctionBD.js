@@ -38,6 +38,23 @@ app.delete('/empresas/:id/noticias', (req, res) => {
   });
 });
 
+// Agregar una ruta para eliminar noticias por su ID
+app.delete('/noticias/:id', (req, res) => {
+  const noticiaId = req.params.id; // Obtener el ID de la noticia de la URL
+
+  // Ejecutar la consulta SQL para eliminar la noticia de la base de datos
+  const sql = `DELETE FROM Noticia WHERE id = ?`;
+  connection.query(sql, [noticiaId], (error, results) => {
+    if (error) {
+      // Enviar una respuesta de error si ocurre un error al ejecutar la consulta
+      res.status(500).json({ error: 'Error al eliminar la noticia' });
+    } else {
+      // Enviar una respuesta de éxito si la noticia se eliminó correctamente
+      res.status(200).json({ message: 'Noticia eliminada correctamente' });
+    }
+  });
+});
+
 app.use(bodyParser.urlencoded({ extended: true })); 
 
 // Configuración de la conexión a la base de datos
@@ -170,7 +187,7 @@ app.get('/empresas/:id', (req, res) => {
   const idEmpresa = req.params.id;
 
   // Consultar la base de datos para obtener la información de la empresa por su ID
-  const sql = 'SELECT Denominacion, QuienesSomos, Telefono, HorarioAtencion, Latitud, Longitud FROM Empresa WHERE id = ?';
+  const sql = 'SELECT Denominacion, QuienesSomos, Telefono, HorarioAtencion, Latitud, Longitud, Domicilio, Email FROM Empresa WHERE id = ?';
   connection.query(sql, [idEmpresa], (err, result) => {
     if (err) {
       console.error('Error al obtener la información de la empresa: ' + err.stack);
@@ -187,10 +204,13 @@ app.get('/empresas/:id', (req, res) => {
       telefono: empresaInfo.Telefono,
       horarioAtencion: empresaInfo.HorarioAtencion,
       latitud: empresaInfo.Latitud,
-      longitud: empresaInfo.Longitud
+      longitud: empresaInfo.Longitud,
+      domicilio: empresaInfo.Domicilio,
+      email: empresaInfo.Email
     });
   });
 });
+
 app.get('/empresas/:id/noticias', (req, res) => {
   const idEmpresa = req.params.id;
 
@@ -232,7 +252,20 @@ app.get('/empresas/:idEmpresa/noticias/:idNoticia', (req, res) => {
   });
 });
 
+app.get('/noticias/:idEmpresa', (req, res) => {
+  const idEmpresa = req.params.idEmpresa;
 
+  // Consultar la base de datos para obtener todos los datos de las noticias de la empresa por su ID
+  // Metodo que se usa en el Lista Noticias
+  const sql = 'SELECT Id, TituloNoticia, ResumenNoticia, ImagenNoticia, ContenidoHTML, Publicada, FechaPublicacion, idEmpresa FROM Noticia WHERE idEmpresa = ?';
+  connection.query(sql, [idEmpresa], (err, results) => {
+    if (err) {
+      console.error('Error al obtener noticias: ' + err.stack);
+      return res.status(500).json({ error: 'Error al obtener noticias' });
+    }
+    res.json(results);
+  });
+});
 
 
 
