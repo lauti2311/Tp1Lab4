@@ -67,10 +67,12 @@
               <input id="searchInput" class="search-form_input" type="text" name="buscar" autocomplete="off" placeholder="Ingrese Texto" />
               <span class="search-form_liveout"></span>
           </label>
-          <button id="searchButton" class="search-form_submit fa-search" type="button"></button>
+          <!-- Cambiado el tipo de botón de "button" a "submit" -->
+          <button id="searchButton" class="search-form_submit fa-search" type="submit"></button>
       </form>
       <script>
-        document.getElementById('searchButton').addEventListener('click', function(event) {
+        // Función para redireccionar al buscador con los parámetros adecuados
+        function redirectToSearch() {
             // Obtener el valor del campo de búsqueda
             var busqueda = document.getElementById('searchInput').value.trim();
       
@@ -89,6 +91,15 @@
       
             // Redirigir manualmente a la URL compuesta
             window.location.href = url;
+        }
+
+        // Agregar un controlador de eventos para el evento submit del formulario
+        document.getElementById('searchForm').addEventListener('submit', function(event) {
+            // Evitar el comportamiento predeterminado del formulario (enviar)
+            event.preventDefault();
+      
+            // Llamar a la función para redireccionar al buscador
+            redirectToSearch();
         });
       </script>
       </div>

@@ -90,7 +90,7 @@
         </form>
         
         <script>
-            document.getElementById('searchButton').addEventListener('click', function(event) {
+            function redirectToSearch() {
                 // Obtener el valor del campo de búsqueda
                 var busqueda = document.getElementById('searchInput').value.trim();
         
@@ -109,6 +109,13 @@
         
                 // Redirigir manualmente a la URL compuesta
                 window.location.href = url;
+            }
+        
+            document.getElementById('searchButton').addEventListener('click', redirectToSearch);
+        
+            document.getElementById('searchForm').addEventListener('submit', function(event) {
+                event.preventDefault(); // Evitar el envío del formulario predeterminado
+                redirectToSearch(); // Redirigir al hacer clic en el botón de búsqueda
             });
           </script>
           
