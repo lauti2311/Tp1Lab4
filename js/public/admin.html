@@ -118,9 +118,12 @@
           agregarNoticiaBtn.onclick = function() {
             location.href = `administrarNoticia.html?id=${empresa.id}`;
           };
+
           accionesCell.appendChild(agregarNoticiaBtn);
           
-         // Botón para modificar
+          //              TODO: HACER BOTON MODIFICAR
+          
+          // Boton para modificar empresa
           const modificarBtn = document.createElement('button');
           modificarBtn.textContent = 'Modificar';
           modificarBtn.setAttribute('data-id', empresa.id);
@@ -129,7 +132,7 @@
             location.href = `modificarEmpresa.html?id=${empresa.id}`;
           };
 
-accionesCell.appendChild(modificarBtn);
+          accionesCell.appendChild(modificarBtn);
 
 
           // Botón para eliminar

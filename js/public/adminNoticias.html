@@ -14,11 +14,11 @@
   .container {
     max-width: 800px;
     margin: 20px auto;
-    background-color: #ffffff;
+    background-color: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    position: relative; /* Añadir posición relativa para el contenedor */
+    position: relative;
   }
   h1 {
     text-align: center;
@@ -75,41 +75,40 @@
   .add-link a:last-child { /* Estilo para el último enlace dentro de .add-link (Volver) */
     float: right; /* Mover a la derecha */
   }
-
 </style>
 </head>
 <body>
 
-<div class="container">
-  <h1>Panel de Administración</h1>
-
-  <h2>Listado de Noticias</h2>
-  <table id="tablaNoticias">
+  <div class="container">
+    <h1>Administrar Noticias</h1>
+  
+    <h2>Listado de Noticias</h2>
+    <table id="tablaNoticias">
       <tr>
-        <th>Título de la Noticia</th>
+        <th>Titulo de la noticia</th>
         <th>Acciones</th>
       </tr>
-  </table>
+    </table>
   
-  <div class="add-link">
-    <a href="admin.html">Volver</a>
+    <div class="add-link">
+      <a href="admin.html">Volver</a>
+    </div>
   </div>
 
-</div>
-
-<script>
-// Función para obtener el ID de la empresa de la URL
-function getIdEmpresaFromUrl() {
+  <script>
+    // Función para obtener el ID de la URL
+function getIdFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get('id');
+  const id = urlParams.get('id');
+  return id;
 }
 
-// Obtener el ID de la empresa de la URL
-const idEmpresa = getIdEmpresaFromUrl();
+// Obtener el ID de la URL
+const idEmpresa = getIdFromUrl();
 
 // Si hay un ID de empresa válido, realizar la solicitud para obtener las noticias
 if (idEmpresa) {
-  fetch(`/noticias/${idEmpresa}`) // Asegúrate de que la ruta sea correcta en tu servidor
+  fetch(`/noticias/${idEmpresa}`)
     .then(response => response.json())
     .then(noticias => {
       const tablaNoticias = document.getElementById('tablaNoticias');
@@ -124,7 +123,17 @@ if (idEmpresa) {
         // Columna para las acciones
         const accionesCell = document.createElement('td');
 
-        // Botón para eliminar
+        const idNoticia = noticia.Id;
+
+        // Botón para Modificar la noticia
+        const mostrarIdBtn = document.createElement('button');
+        mostrarIdBtn.textContent = 'Modificar';
+        mostrarIdBtn.onclick = function() {
+          alert(`ID de la noticia: ${idNoticia}`);
+        };
+        accionesCell.appendChild(mostrarIdBtn);
+
+        // Botón para eliminar noticia
         const eliminarBtn = document.createElement('button');
         eliminarBtn.textContent = 'Eliminar';
         eliminarBtn.onclick = function() {
@@ -146,15 +155,8 @@ if (idEmpresa) {
             console.error('Error al eliminar la noticia:', error);
           });
         };
-        accionesCell.appendChild(eliminarBtn);
 
-        // Botón para mostrar ID de la noticia
-        const mostrarIdBtn = document.createElement('button');
-        mostrarIdBtn.textContent = 'Mostrar ID';
-        mostrarIdBtn.onclick = function() {
-          alert(`ID de la noticia: ${noticia.Id}`);
-        };
-        accionesCell.appendChild(mostrarIdBtn);
+        accionesCell.appendChild(eliminarBtn);
 
         // Agregar las acciones a la fila
         row.appendChild(accionesCell);
@@ -164,9 +166,10 @@ if (idEmpresa) {
       });
     })
     .catch(error => console.error('Error al obtener las noticias:', error));
-} else {
-  console.error('ID de empresa no encontrado en la URL');
-}
+
+    } else {
+      console.error('ID de empresa no encontrado en la URL');
+    }
   </script>
 
 </body>

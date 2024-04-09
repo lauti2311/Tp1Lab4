@@ -61,4 +61,18 @@ body {
   input[type="submit"]:hover {
     background-color: #00c1be; 
   }
+
+  button{
+    margin-top: 20px;
+    margin-left: 200px;
+    margin-right: 200px;
+    background-color: #0de5da;
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
   
