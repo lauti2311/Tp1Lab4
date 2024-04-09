@@ -18,7 +18,6 @@
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    position: relative;
   }
   h1 {
     text-align: center;
@@ -118,22 +117,17 @@
           agregarNoticiaBtn.onclick = function() {
             location.href = `administrarNoticia.html?id=${empresa.id}`;
           };
-
           accionesCell.appendChild(agregarNoticiaBtn);
           
-          //              TODO: HACER BOTON MODIFICAR
-          
-          // Boton para modificar empresa
+          // Botón para modificar
           const modificarBtn = document.createElement('button');
           modificarBtn.textContent = 'Modificar';
-          modificarBtn.setAttribute('data-id', empresa.id);
           modificarBtn.onclick = function() {
-            // Redirigir al usuario a la página de modificarEmpresa.html con el ID de la empresa en la URL
-            location.href = `modificarEmpresa.html?id=${empresa.id}`;
+            // Agregar lógica para el botón Modificar si es necesario
+            console.log('Modificar empresa:', empresa.id);
           };
-
           accionesCell.appendChild(modificarBtn);
-
+          
 
           // Botón para eliminar
           const eliminarBtn = document.createElement('button');
@@ -141,49 +135,42 @@
           eliminarBtn.setAttribute('data-id', empresa.id); // Asignar el ID de la empresa como un atributo personalizado
           eliminarBtn.onclick = function() {
             const id = this.getAttribute('data-id'); // Obtener el ID de la empresa desde el atributo personalizado
+  
+          // Hacer una solicitud DELETE al servidor para eliminar las noticias asociadas a la empresa
+          fetch(`/empresas/${id}/noticias`, {
+            method: 'DELETE'
+          })
 
-            // Hacer una solicitud DELETE al servidor para eliminar las noticias asociadas a la empresa
-            fetch(`/empresas/${id}/noticias`, {
+          .then(response => {
+            if (response.ok) {
+            // Si las noticias se eliminan correctamente, hacer una solicitud DELETE para eliminar la empresa
+            fetch(`/empresas/${id}`, {
               method: 'DELETE'
             })
-            .then(response => {
-              if (response.ok) {
-                // Si las noticias se eliminan correctamente, hacer una solicitud DELETE para eliminar la empresa
-                fetch(`/empresas/${id}`, {
-                  method: 'DELETE'
-                })
-                .then(response => {
-                  if (response.ok) {
-                    console.log('La empresa se eliminó correctamente');
-                    // Recargar la página para reflejar los cambios
-                    location.reload();
-                  } else {
-                    console.error('Error al eliminar la empresa');
-                  }
-                })
-                .catch(error => {
-                  console.error('Error al eliminar la empresa:', error);
-                });
-              } else {
-                console.error('Error al eliminar las noticias asociadas a la empresa');
-              }
-            })
-            .catch(error => {
-              console.error('Error al eliminar las noticias asociadas a la empresa:', error);
-            });
-          };
-          accionesCell.appendChild(eliminarBtn);
 
-            // Botón para lista de noticias
-            const listaNoticiasBtn = document.createElement('button');
-            listaNoticiasBtn.textContent = 'Lista Noticias';
-            listaNoticiasBtn.onclick = function() {
-              const idEmpresa = empresa.id;
-              location.href = `http://localhost:3000/adminNoticias.html?id=${idEmpresa}`;
-            };
-            accionesCell.appendChild(listaNoticiasBtn);
+          .then(response => {
+            if (response.ok) {
+              console.log('La empresa se eliminó correctamente');
+              // Recargar la página para reflejar los cambios
+            location.reload();
+          } else {
+            console.error('Error al eliminar la empresa');
+          }
+          })
 
-
+          .catch(error => {
+            console.error('Error al eliminar la empresa:', error);
+          });
+          } else {
+            console.error('Error al eliminar las noticias asociadas a la empresa');
+          }
+          })
+          .catch(error => {
+            console.error('Error al eliminar las noticias asociadas a la empresa:', error);
+          });
+};
+accionesCell.appendChild(eliminarBtn);
+          
           // Agregar las acciones a la fila
           row.appendChild(accionesCell);
           
