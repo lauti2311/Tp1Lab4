@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario de Modificación</title>
+<link rel="stylesheet" href="css/estilosEmpresa.css"> <!-- Enlace al archivo CSS -->
+</head>
+<body>
+
+<div class="container">
+  <h1>Formulario de Modificacion</h1>
+  <form id="formulario" method="PUT" action="/modificar_empresa/${idEmpresa}">
+    <input type="hidden" name="_method" value="PUT">
+
+    <label for="denominacion">Denominación:</label>
+    <input type="text" id="denominacion" name="denominacion" required>
+    
+    <label for="telefono">Teléfono:</label>
+    <input type="text" id="telefono" name="telefono" required>
+    
+    <label for="horario">Horario de Atención:</label>
+    <input type="text" id="horario" name="horario" required>
+    
+    <label for="quienes_somos">Quiénes Somos:</label>
+    <textarea id="quienes_somos" name="quienes_somos" rows="4" required></textarea>
+    
+    <label for="latitud">Latitud:</label>
+    <input type="text" id="latitud" name="latitud" required>
+    
+    <label for="longitud">Longitud:</label>
+    <input type="text" id="longitud" name="longitud" required>
+    
+    <label for="domicilio">Domicilio:</label>
+    <input type="text" id="domicilio" name="domicilio" required>
+    
+    <label for="email">Email:</label>
+    <input type="text" id="email" name="email" required>
+    
+    <input type="submit" value="Enviar">
+  </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+  const formulario = document.getElementById('formulario');
+  const urlParams = new URLSearchParams(window.location.search);
+  const idEmpresa = urlParams.get('id');
+
+  // Función para actualizar la acción del formulario con el idEmpresa
+  function actualizarAccionFormulario(id) {
+    formulario.action = `/modificar_empresa/${id}`;
+  }
+
+  formulario.addEventListener('submit', function(event) {
+    event.preventDefault(); // Evita que el formulario se envíe automáticamente
+
+    const formData = new FormData(formulario); // Obtener los datos del formulario
+
+    fetch(formulario.action, {
+      method: 'PUT',
+      body: formData
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Error al actualizar los datos de la empresa');
+      }
+      return response.text();
+    })
+    .then(message => {
+      const mensaje = `Los datos se han actualizado correctamente:
+        Denominación: ${document.getElementById('denominacion').value}
+        Teléfono: ${document.getElementById('telefono').value}
+        Horario de Atención: ${document.getElementById('horario').value}
+        Quiénes Somos: ${document.getElementById('quienes_somos').value}
+        Latitud: ${document.getElementById('latitud').value}
+        Longitud: ${document.getElementById('longitud').value}
+        Domicilio: ${document.getElementById('domicilio').value}
+        Email: ${document.getElementById('email').value}`;
+
+      // Mostrar el mensaje personalizado en un alert
+      alert(mensaje);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Error al actualizar los datos de la empresa');
+    });
+  });
+
+  if (idEmpresa) {
+    // Obtener los datos de la empresa para prellenar el formulario
+    fetch(`/empresas/${idEmpresa}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error al obtener los datos de la empresa');
+        }
+        return response.json();
+      })
+      .then(empresa => {
+        // Poblar los campos del formulario con los datos de la empresa
+        document.getElementById('denominacion').value = empresa.denominacion || '';
+        document.getElementById('telefono').value = empresa.telefono || '';
+        document.getElementById('horario').value = empresa.horarioAtencion || '';
+        document.getElementById('quienes_somos').value = empresa.quienesSomos || '';
+        document.getElementById('latitud').value = empresa.latitud || '';
+        document.getElementById('longitud').value = empresa.longitud || '';
+        document.getElementById('domicilio').value = empresa.domicilio || '';
+        document.getElementById('email').value = empresa.email || '';
+
+        // Actualizar la acción del formulario con el idEmpresa
+        actualizarAccionFormulario(idEmpresa);
+      })
+      .catch(error => console.error('Error al obtener los datos de la empresa:', error));
+  }
+});
+  </script>  
+
+</body>
+</html>
