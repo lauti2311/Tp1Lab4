@@ -184,8 +184,9 @@
                 // Columna para el enlace de la página de la noticia
                 const verNoticiaCell = document.createElement('td');
                 const link = document.createElement('a');
-                link.href = `detalle.html?id=${noticia.id}`; // Reemplaza verNoticia.html con la página real
+                link.href = `detalle.html?idEmpresa=${empresaId}&idNoticia=${noticia.id}`;
                 link.textContent = 'Leer más';
+                link.onclick = () => irADetalle(noticia.id); // Asigna la función para redirigir al detalle
                 verNoticiaCell.appendChild(link);
                 row.appendChild(verNoticiaCell);
 
@@ -200,7 +201,11 @@
         })
         .catch(error => console.error('Error al obtener las noticias:', error));
 
-
+    // Función para obtener los datos de la noticia y redirigir al detalle
+    function irADetalle(idNoticia) {
+        const idEmpresa = obtenerIdDeUrl();
+        window.location.href = `detalle.html?idEmpresa=${idEmpresa}&idNoticia=${idNoticia}`;
+    }
 </script>
  <!--========================================================
                             FOOTER
@@ -244,7 +249,7 @@
       const idEmpresa = obtenerParametroDeURL('id');
       window.location.href = `detalle.html?idEmpresa=${idEmpresa}&idNoticia=${idNoticia}`;
     }
-  </script>
+</script>
 <!-- coded by vitlex -->
 </body>
 </html>
