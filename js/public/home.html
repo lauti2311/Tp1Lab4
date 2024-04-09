@@ -81,14 +81,37 @@
               </ul>
             </div>
           </nav>
-          <form class="search-form" action="buscador.html" method="GET" accept-charset="utf-8">
+          <form id="searchForm" class="search-form" method="GET" accept-charset="utf-8">
             <label class="search-form_label">
-              <input class="search-form_input" type="text" name="buscar" autocomplete="off"
-                placeholder="Ingrese Texto" />
-              <span class="search-form_liveout"></span>
+                <input id="searchInput" class="search-form_input" type="text" name="buscar" autocomplete="off" placeholder="Ingrese Texto" />
+                <span class="search-form_liveout"></span>
             </label>
-            <button class="search-form_submit fa-search" type="submit"></button>
-          </form>
+            <button id="searchButton" class="search-form_submit fa-search" type="button"></button>
+        </form>
+        
+        <script>
+            document.getElementById('searchButton').addEventListener('click', function(event) {
+                // Obtener el valor del campo de búsqueda
+                var busqueda = document.getElementById('searchInput').value.trim();
+        
+                // Obtener el ID de la empresa de la URL actual
+                var urlParams = new URLSearchParams(window.location.search);
+                var idEmpresa = urlParams.get('id');
+        
+                // Construir la URL de redirección
+                var url = 'buscador.html?id=' + idEmpresa;
+        
+                // Verificar si el campo de búsqueda no está vacío
+                if (busqueda !== '') {
+                    // Agregar el término de búsqueda a la URL
+                    url += '&buscar=' + encodeURIComponent(busqueda);
+                }
+        
+                // Redirigir manualmente a la URL compuesta
+                window.location.href = url;
+            });
+          </script>
+          
         </div>
       </div>
     </header>
