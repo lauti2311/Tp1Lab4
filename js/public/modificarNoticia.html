@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario de Modificación de Noticia</title>
+<link rel="stylesheet" href="css/estilosNoticia.css"> <!-- Enlace al archivo CSS -->
+</head>
+<body>
+
+<div class="container">
+  <h1>Formulario de Modificación de Noticia</h1>
+  <form id="formulario" method="POST" action="/noticiaas/${idNoticia}">
+
+
+    <label for="titulo">Título:</label>
+    <input type="text" id="titulo" name="titulo" required>
+    
+    <label for="resumen">Resumen:</label>
+    <textarea id="resumen" name="resumen" rows="4" required></textarea>
+    
+    <label for="imagen">Imagen (URL):</label>
+    <input type="text" id="imagen" name="imagen" required>
+    
+    <label for="contenidoHTML">Contenido HTML:</label>
+    <textarea id="contenidoHTML" name="contenidoHTML" rows="8" required></textarea>
+    
+    <label for="publicada">Publicada?</label>
+    <input type="checkbox" id="publicada" name="publicada">
+    
+    <label for="fecha">Fecha de Publicación:</label>
+    <input type="date" id="fecha" name="fecha" required>
+    
+    <input type="submit" value="Enviar">
+  </form>
+</div>
+
+</body>
+</html>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+  const formulario = document.getElementById('formulario');
+  const urlParams = new URLSearchParams(window.location.search);
+  const idNoticia = urlParams.get('id');
+
+  // Función para actualizar la acción del formulario con el idNoticia
+  function actualizarAccionFormulario(id) {
+    formulario.action = `/noticiaas/${id}`; // Ruta corregida para la actualización de la noticia
+  }
+
+  formulario.addEventListener('submit', function(event) {
+    event.preventDefault(); // Evita que el formulario se envíe automáticamente
+
+    const formData = new FormData(formulario); // Obtener los datos del formulario
+    fetch(formulario.action, {
+      method: 'PUT', // Cambiado a método POST
+      body: formData
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Error al actualizar los datos de la noticia');
+      }
+      return response.json();
+    })
+    .then(data => {
+      alert(data.message); // Mostrar el mensaje de éxito
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Error al actualizar los datos de la noticia');
+    });
+  });
+
+  if (idNoticia) {
+    // Obtener los datos de la noticia para prellenar el formulario
+    fetch(`/noticiaas/${idNoticia}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error al obtener los datos de la noticia');
+        }
+        return response.json();
+      })
+      .then(noticia => {
+        // Poblar los campos del formulario con los datos de la noticia
+        document.getElementById('titulo').value = noticia.TituloNoticia || '';
+        document.getElementById('resumen').value = noticia.ResumenNoticia || '';
+        document.getElementById('imagen').value = noticia.ImagenNoticia || '';
+        document.getElementById('contenidoHTML').value = noticia.ContenidoHTML || '';
+        document.getElementById('publicada').checked = noticia.Publicada || false;
+        document.getElementById('fecha').value = noticia.FechaPublicacion || '';
+
+      // Actualizar la acción del formulario con el idNoticia
+      actualizarAccionFormulario(idNoticia);
+    })
+    .catch(error => console.error('Error al obtener los datos de la noticia:', error));
+  }
+});
+</script>  
