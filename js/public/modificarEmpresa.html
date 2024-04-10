@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
       return response.json();
     })
     .then(data => {
-      alert(data.message); // Mostrar el mensaje de éxito
+      location.href = '/admin.html';
     })
     .catch(error => {
       console.error('Error:', error);

@@ -65,10 +65,12 @@
     })
     .then(data => {
       alert(data.message); // Mostrar el mensaje de éxito
+      location.href = '/adminNoticias.html';
     })
     .catch(error => {
       console.error('Error:', error);
       alert('Error al actualizar los datos de la noticia');
+      location.href = '/adminNoticias.html';
     });
   });
 
