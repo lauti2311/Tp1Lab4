@@ -8,8 +8,8 @@
     <meta name="format-detection" content="telephone=no"/>
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/homecss.css">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
     <title>PRIVACY</title>
 
     <!-- Bootstrap -->
@@ -17,6 +17,35 @@
 
     <!-- Links -->
     <link rel="stylesheet" href="css/search.css">
+
+    <!-- Tus estilos para el listado de noticias -->
+    <style>
+        #tablaNoticias {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        #tablaNoticias th, #tablaNoticias td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        #tablaNoticias th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+        #tablaNoticias tr:hover {
+            background-color: #f2f2f2;
+        }
+        /* Estilos para el link "Leer más" */
+        #tablaNoticias a {
+            color: blue; /* Color azul para el link */
+            text-decoration: none; /* Eliminar subrayado predeterminado */
+            transition: all 0.3s ease; /* Efecto de transición */
+        }
+        #tablaNoticias a:hover {
+            text-decoration: underline; /* Subrayado al pasar el cursor sobre el link */
+        }
+    </style>
 
     <!--JS-->
     <script src="js/jquery.js"></script>
@@ -122,10 +151,10 @@
         </section>
     </main>
 
- <!--========================================================
+    <!--========================================================
                             FOOTER
   =========================================================-->
-  <footer>
+    <footer>
 	<section class="well">
 		<div class="container">
 			<p class="rights">
@@ -204,30 +233,12 @@
             imagenCell.appendChild(imagen);
             row.appendChild(imagenCell);
 
-            // Columna para el título de la noticia
-            const tituloCell = document.createElement('td');
-            tituloCell.textContent = noticia.TituloNoticia; // Actualizado al campo correcto
-            row.appendChild(tituloCell);
-
-            // Columna para el resumen de la noticia
-            const resumenCell = document.createElement('td');
-            resumenCell.textContent = noticia.ResumenNoticia; // Actualizado al campo correcto
-            row.appendChild(resumenCell);
-            
-            // Columna para la fecha de publicación de la noticia
-            const fechaPublicacionCell = document.createElement('td');
-            fechaPublicacionCell.textContent = noticia.FechaPublicacion; // Actualizado al campo correcto
-            row.appendChild(fechaPublicacionCell);
-
-            // Columna para el enlace de la página de la noticia
-            const verNoticiaCell = document.createElement('td');
-            const link = document.createElement('a');
-            
-            link.href = `detalle.html?idEmpresa=${empresaId}&idNoticia=${noticia.id}`;
-            link.textContent = 'Leer más';
-            link.onclick = () => irADetalle(noticia.id); // Asigna la función para redirigir al detalle
-            verNoticiaCell.appendChild(link);
-            row.appendChild(verNoticiaCell);
+            // Columna para el título y resumen de la noticia
+            const tituloResumenCell = document.createElement('td');
+            const tituloResumen = document.createElement('div');
+            tituloResumen.innerHTML = `<strong>${noticia.TituloNoticia}</strong><br>${noticia.ResumenNoticia}<br><a href="detalle.html?idEmpresa=${empresaId}&idNoticia=${noticia.id}" onclick="irADetalle(${noticia.id})">Leer más</a><br>${noticia.FechaPublicacion}`;
+            tituloResumenCell.appendChild(tituloResumen);
+            row.appendChild(tituloResumenCell);
 
             // Agregar la fila a la tabla
             tablaNoticias.querySelector('tbody').appendChild(row); // Cambiado aquí
