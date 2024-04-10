@@ -129,7 +129,7 @@ if (idEmpresa) {
         const mostrarIdBtn = document.createElement('button');
         mostrarIdBtn.textContent = 'Modificar';
         mostrarIdBtn.onclick = function() {
-          alert(`ID de la noticia: ${idNoticia}`);
+          location.href = `modificarNoticia.html?id=${noticia.Id}`;
         };
         accionesCell.appendChild(mostrarIdBtn);
 

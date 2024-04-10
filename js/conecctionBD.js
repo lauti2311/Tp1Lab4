@@ -270,6 +270,21 @@ app.get('/noticias/:idEmpresa', (req, res) => {
   });
 });
 
+app.get('/noticiaas/:id', (req, res) => {
+  const idNoticia = req.params.id;
+
+  // Consultar la base de datos para obtener la información de la noticia por su ID
+  const sql = 'SELECT Id, TituloNoticia, ResumenNoticia, ImagenNoticia, ContenidoHTML, Publicada, FechaPublicacion, idEmpresa FROM Noticia WHERE id = ?';
+  connection.query(sql, [idNoticia], (err, results) => {
+    if (err) {
+      console.error('Error al obtener noticias: ' + err.stack);
+      return res.status(500).json({ error: 'Error al obtener noticias' });
+    }
+    res.json(results);
+  });
+  
+});
+
 
 app.put('/empresas/:id', upload.none(), (req, res) => {
   const idEmpresa = req.params.id;
@@ -277,6 +292,23 @@ app.put('/empresas/:id', upload.none(), (req, res) => {
 
   const sql = `UPDATE Empresa SET Denominacion = ?, Telefono = ?, HorarioAtencion = ?, QuienesSomos = ?, Latitud = ?, Longitud = ?, Domicilio = ?, Email = ? WHERE id = ?`;
   const valores = [denominacion, telefono, horario, quienes_somos, latitud, longitud, domicilio, email, idEmpresa];
+
+  connection.query(sql, valores, (err) => {
+    if (err) {
+      console.error('Error al actualizar datos en la base de datos: ' + err.stack);
+      return res.status(500).json({ error: 'Error al actualizar datos de la empresa' });
+    }
+    console.log('Datos actualizados correctamente en la base de datos');
+    res.status(200).json({ message: 'Datos de la empresa actualizados correctamente' });
+  });
+});
+
+app.put('/noticiaas/:id', upload.none(), (req, res) => {
+  const idNoticia = req.params.id;
+  const { tituloNoticia, resumenNoticia, imagenNoticia, contenidoHTML, publicada, fechaPublicacion } = req.body;
+
+  const sql = `UPDATE Noticia SET TituloNoticia = ?, ResumenNoticia = ?, ImagenNoticia = ?, ContenidoHTML = ?, Publicada = ?, FechaPublicacion = ? WHERE id = ?`;
+  const valores = [tituloNoticia, resumenNoticia, imagenNoticia, contenidoHTML, publicada, fechaPublicacion, idNoticia];
 
   connection.query(sql, valores, (err) => {
     if (err) {
