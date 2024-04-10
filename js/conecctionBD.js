@@ -1,6 +1,9 @@
 const express = require('express');
 const mysql = require('mysql');
 const bodyParser = require('body-parser'); 
+const multer = require('multer'); // Importa multer
+const upload = multer(); // Inicializa multer sin almacenamiento de archivos, solo para datos
+
 
 const app = express();
 
@@ -268,6 +271,22 @@ app.get('/noticias/:idEmpresa', (req, res) => {
 });
 
 
+app.put('/empresas/:id', upload.none(), (req, res) => {
+  const idEmpresa = req.params.id;
+  const { denominacion, telefono, horario, quienes_somos, latitud, longitud, domicilio, email } = req.body;
+
+  const sql = `UPDATE Empresa SET Denominacion = ?, Telefono = ?, HorarioAtencion = ?, QuienesSomos = ?, Latitud = ?, Longitud = ?, Domicilio = ?, Email = ? WHERE id = ?`;
+  const valores = [denominacion, telefono, horario, quienes_somos, latitud, longitud, domicilio, email, idEmpresa];
+
+  connection.query(sql, valores, (err) => {
+    if (err) {
+      console.error('Error al actualizar datos en la base de datos: ' + err.stack);
+      return res.status(500).json({ error: 'Error al actualizar datos de la empresa' });
+    }
+    console.log('Datos actualizados correctamente en la base de datos');
+    res.status(200).json({ message: 'Datos de la empresa actualizados correctamente' });
+  });
+});
 
 // Servir archivos estáticos desde el directorio 'public'
 app.use(express.static('public'));
