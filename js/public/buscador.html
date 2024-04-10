@@ -7,6 +7,9 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="format-detection" content="telephone=no"/>
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/homecss.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
     <title>PRIVACY</title>
 
     <!-- Bootstrap -->
@@ -40,7 +43,9 @@
         <div class="container top-sect">
             <div class="navbar-header">
                 <h1 class="navbar-brand">
-                    <a data-type='rd-navbar-brand' href="./"><small id="denominacion">denominacionEmpresa</small></a>
+                    <a data-type='rd-navbar-brand' href="./">
+                        <p id="denominacion">denominacionEmpresa</p>
+                    </a>
                 </h1>
                 <a class="search-form_toggle" href="#"></a>
             </div>
@@ -155,16 +160,14 @@
     document.querySelector('.search-form').addEventListener('submit', function(event) {
         event.preventDefault(); // Evitar el envío del formulario
 
+        // Obtener el término de búsqueda del campo de búsqueda
         const terminoBusqueda = this.querySelector('.search-form_input').value.trim();
-        filtrarNoticias(terminoBusqueda);
-        establecerTerminoDeBusquedaEnElemento('searchTerm'); // Agregado
-    });
 
-    // Función para manejar la búsqueda cuando se cambia el contenido del campo de búsqueda
-    document.querySelector('.search-form_input').addEventListener('input', function() {
-        const terminoBusqueda = this.value.trim();
-        filtrarNoticias(terminoBusqueda);
-        establecerTerminoDeBusquedaEnElemento('searchTerm'); // Agregado
+        // Obtener el ID de la empresa de la URL actual
+        const idEmpresa = obtenerIdDeUrl();
+
+        // Redirigir a buscador.html con el término de búsqueda y el ID de la empresa como parámetros
+        window.location.href = `buscador.html?id=${idEmpresa}&buscar=${encodeURIComponent(terminoBusqueda)}`;
     });
 
     // Función para obtener el término de búsqueda de la URL
@@ -184,7 +187,8 @@
 
     // Realizar una solicitud al servidor para obtener las noticias de la empresa específica
     const empresaId = obtenerIdDeUrl();
-    fetch(`/empresas/${empresaId}/noticias`)
+    const terminoBusqueda = obtenerTerminoDeBusqueda();
+    fetch(`/empresas/${empresaId}/noticias?buscar=${encodeURIComponent(terminoBusqueda)}`)
     .then(response => response.json())
     .then(noticias => {
         const tablaNoticias = document.getElementById('tablaNoticias');
@@ -218,6 +222,7 @@
             // Columna para el enlace de la página de la noticia
             const verNoticiaCell = document.createElement('td');
             const link = document.createElement('a');
+            
             link.href = `detalle.html?idEmpresa=${empresaId}&idNoticia=${noticia.id}`;
             link.textContent = 'Leer más';
             link.onclick = () => irADetalle(noticia.id); // Asigna la función para redirigir al detalle
@@ -242,26 +247,6 @@
     }
 </script>
 
-
-<!-- Script para obtener datos de la empresa desde el servidor -->
-<script>
-    function obtenerParametroDeURL(parametro) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(parametro);
-    }
-
-    const idEmpresa = obtenerParametroDeURL('id');
-
-    fetch(`/empresas/${idEmpresa}`)
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('denominacion').textContent = data.denominacion || 'Empresa no encontrada';
-            document.getElementById('telefonoValue').textContent = data.telefono || 'Teléfono no disponible';
-            document.getElementById('horarioAtencion').textContent = data.horarioAtencion || 'Horario no disponible';
-            document.getElementById('denominacionEmpresaFooter').textContent = data.denominacion || 'Empresa no encontrada'; // Modificación aquí
-        })
-        .catch(error => console.error('Error al obtener la información de la empresa:', error));
-</script>
 <script>
     function irAHome() {
         // Obtener el ID de la empresa de la URL actual
@@ -273,7 +258,28 @@
         // Redirigir a la página home.html con el ID de la empresa en la URL
         window.location.href = url;
     }
-  </script>
-<!-- coded by vitlex -->
+</script>
+<script>
+    // Función para obtener los datos de la empresa y actualizar los campos
+    function obtenerDatosEmpresa() {
+        const idEmpresa = obtenerIdDeUrl();
+        
+        // Realizar una solicitud al servidor para obtener los datos de la empresa
+        fetch(`/empresas/${idEmpresa}`)
+            .then(response => response.json())
+            .then(data => {
+                // Actualizar los campos HTML con los datos de la empresa
+                document.getElementById('denominacion').textContent = data.denominacion || 'Empresa no encontrada';
+                document.getElementById('telefonoValue').textContent = data.telefono || 'Teléfono no disponible';
+                document.getElementById('horarioAtencion').textContent = data.horarioAtencion || 'Horario no disponible';
+                document.getElementById('denominacionEmpresaFooter').textContent = data.denominacion || 'Empresa no encontrada';
+            })
+            .catch(error => console.error('Error al obtener la información de la empresa:', error));
+    }
+    
+    // Llamar a la función para obtener los datos de la empresa cuando se cargue la página
+    obtenerDatosEmpresa();
+</script>
+
 </body>
 </html>
