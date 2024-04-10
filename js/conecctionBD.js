@@ -280,7 +280,7 @@ app.get('/noticiaas/:id', (req, res) => {
       console.error('Error al obtener noticias: ' + err.stack);
       return res.status(500).json({ error: 'Error al obtener noticias' });
     }
-    res.json(results);
+    res.json(results[0]);
   });
   
 });
